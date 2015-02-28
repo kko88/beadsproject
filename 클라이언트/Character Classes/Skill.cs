@@ -15,12 +15,12 @@
     }
 }
 
-public enum SkillName // 기술 이름
+public enum SkillName 
 {
-    Melee_Offence,
-    Melee_Defence,
-    Ranged_Offence,
-    Ranged_Defence,
-    Magic_Offence,
-    Magic_Defence
+    근접공격,
+    근접방어,
+    범위공격,
+    범위방어,
+    마법공격,
+    마법방어
 }

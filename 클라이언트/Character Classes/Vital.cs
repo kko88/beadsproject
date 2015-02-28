@@ -23,9 +23,9 @@ public class Vital : ModifiedStat {
     }
 }
 
-public enum VitalName  // 생명력에 관련된 속성
+public enum VitalName  
 {
-    Health,
-    Energy,
-    Mana
+    체력,
+    에너지,
+    마나
 }
