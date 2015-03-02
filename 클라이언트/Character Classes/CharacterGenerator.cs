@@ -20,11 +20,24 @@ public class CharacterGenerator : MonoBehaviour
     private const int BUTTON_HEIGHT = 20;
 
     private int statStartingPos = 40;
+
+    public GUISkin mySkin;  // jpg파일 구해서 그림,색 조정
+
+    public GameObject playerPrefab;
+
+
+
     // Use this for initialization
     void Start()
     {
-        _toon = new PlayerCharacter();
-        _toon.Awake();
+        GameObject pc = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+
+        pc.name = "pc";
+
+       // _toon = new PlayerCharacter();
+       // _toon.Awake();
+
+        _toon = pc.GetComponent<PlayerCharacter>(); 
 
         pointsLeft = STARTING_POINTS;
 
@@ -44,11 +57,21 @@ public class CharacterGenerator : MonoBehaviour
 
     void OnGUI()
     {
+   //     GUI.skin = mySkin;
+
         DisplayName();
         DisplayPointsLeft();
         DisplayAttributes();
+
+   //     GUI.skin = null;
+
         DisplayVitals();
+
+   //     GUI.skin = mySkin;
+
         DisplaySkills();
+        DisplayCreateButton();
+
     }
 
     private void DisplayName()
@@ -148,5 +171,14 @@ public class CharacterGenerator : MonoBehaviour
     private void DisplayPointsLeft()
     {
         GUI.Label(new Rect(250,10,100,25), "잔여 능력치:" +pointsLeft.ToString());
-    } 
+    }
+
+    private void DisplayCreateButton() 
+    {
+        if(GUI.Button(new Rect(
+                Screen.width / 2 - 50, statStartingPos + (10 * LINE_HEIGHT), 100, LINE_HEIGHT  ), "Create"))
+        {
+            Application.LoadLevel("PlayerEnemy");
+        }
+    }
 }
