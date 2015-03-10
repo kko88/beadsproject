@@ -1,4 +1,4 @@
-﻿
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class ModifiedStat : BaseStat {  
@@ -26,6 +26,28 @@ public class ModifiedStat : BaseStat {
     }
     public void Update() {
          CalculateModValue();
+    }
+
+    public string GetModifyingAttributesString()
+    {
+        string temp = "";
+       
+          UnityEngine.Debug.Log(_mods.Count);
+
+        for (int cnt = 0; cnt < _mods.Count; cnt++)
+        {
+            temp += _mods[cnt].attribute.Name;
+            temp += "_";
+            temp += _mods[cnt].ratio;
+
+            if (cnt < _mods.Count - 1)
+                temp += "|";
+
+        }
+
+        UnityEngine.Debug.Log(temp);
+
+        return "";
     }
 }
 

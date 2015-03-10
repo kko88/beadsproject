@@ -178,7 +178,19 @@ public class CharacterGenerator : MonoBehaviour
         if(GUI.Button(new Rect(
                 Screen.width / 2 - 50, statStartingPos + (10 * LINE_HEIGHT), 100, LINE_HEIGHT  ), "Create"))
         {
-            Application.LoadLevel("PlayerEnemy");
+            GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
+            UpdateCurVitalValues();
+            gsScript.SaveCharacterData();
+            Application.LoadLevel("Level1");
         }
     }
+
+    private void UpdateCurVitalValues()
+    {
+        for (int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++)
+        {
+            _toon.GetVital(cnt).CurValue = _toon.GetVital(cnt).AdjustedBaseValue;
+        }
+    }
+
 }
