@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Collections.Generic;   // <>리스트 사용
 
 public class ModifiedStat : BaseStat {  
     private List<ModifyingAttribute> _mods;	 //  수정된 스탯
     private int _modValue;     
 
     public ModifiedStat(){
-        _mods = new List<ModifyingAttribute>();
+        UnityEngine.Debug.Log("수정된 스탯");
+        _mods = new List<ModifyingAttribute>(); 
         _modValue = 0;
     }
     public void AddModifier(ModifyingAttribute mod){
@@ -32,7 +33,7 @@ public class ModifiedStat : BaseStat {
     {
         string temp = "";
        
-          UnityEngine.Debug.Log(_mods.Count);
+    //      UnityEngine.Debug.Log(_mods.Count);
 
         for (int cnt = 0; cnt < _mods.Count; cnt++)
         {
@@ -45,11 +46,12 @@ public class ModifiedStat : BaseStat {
 
         }
 
-        UnityEngine.Debug.Log(temp);
+    //    UnityEngine.Debug.Log(temp);
 
         return "";
     }
 }
+
 
 public struct ModifyingAttribute{
     public Attribute attribute;
@@ -57,6 +59,7 @@ public struct ModifyingAttribute{
 
     public ModifyingAttribute(Attribute att, float rat)
     {
+        UnityEngine.Debug.Log("수정할 속성 생성");
         attribute = att;
         ratio = rat;
     }
