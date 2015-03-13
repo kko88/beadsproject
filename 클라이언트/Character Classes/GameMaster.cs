@@ -14,9 +14,27 @@ public class GameMaster : MonoBehaviour {
     private GameObject _pc;
     private PlayerCharacter _pcScript;
 
+    private Vector3 _playerSpawnPointPos;      
+
 	// Use this for initialization
 	void Start () {
-      _pc =   Instantiate(playerCharacter, Vector3.zero, Quaternion.identity) as GameObject;
+
+        _playerSpawnPointPos = new Vector3(700, 32, 500); // 캐릭터 생성지점 디폴트값
+
+        GameObject go = GameObject.Find(GameSettings.PLAYER_SPAWN_POINT);
+       
+        if (go == null)
+        {
+            Debug.LogWarning("캐릭터 생성지점을 찾을수 없습니다");
+            
+            go = new GameObject(GameSettings.PLAYER_SPAWN_POINT);
+            Debug.Log("캐릭터 생성지점");
+
+            go.transform.position = _playerSpawnPointPos;
+            Debug.Log("캐릭터 생성지점 이동");
+
+        }
+        _pc = Instantiate(playerCharacter,go.transform.position, Quaternion.identity) as GameObject;
       _pc.name = "pc";
       
       _pcScript = _pc.GetComponent<PlayerCharacter>(); 
