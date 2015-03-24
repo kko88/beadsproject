@@ -36,33 +36,43 @@ public class TargetMob : MonoBehaviour
     {
         targets.Sort(delegate(Transform t1, Transform t2)
         {
-            return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
+           return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
         });
     }
     private void TargetEnemy()
     {
-        if (selectedTarget == null) // 적이없을때 
-        {
-            SortTargetsByDistance();
-            selectedTarget = targets[0];
-        }
+        if (targets.Count == 0)
+        
+            AddAllEnemies();
 
-        else
+        
+        if (targets.Count > 0)
         {
-            int index = targets.IndexOf(selectedTarget);
+                if (selectedTarget == null) // 적이없을때    
+                {
+                    SortTargetsByDistance();
+                    selectedTarget = targets[0];
+                }
 
-            if (index < targets.Count - 1)
-            {
-                index++;
-            }
-            else
-            {
-                index = 0;
-            }
-            DeselectTarget();    // 선택안된 타겟 같이 보여짐(초록색)
-            selectedTarget = targets[index];
+                else
+                {
+                    int index = targets.IndexOf(selectedTarget);
+
+                    if (index < targets.Count - 1)
+                    {
+                        index++;
+                    }
+                    else
+                    {
+                        index = 0;
+                    }
+                    DeselectTarget();    // 선택안된 타겟 같이 보여짐(초록색)
+                    selectedTarget = targets[index];
+                }
+                SelectTarget();    
         }
-        SelectTarget();
+        
+        
     }
 
     private void SelectTarget() // 선택하면 색변화(tab키)

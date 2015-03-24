@@ -14,12 +14,12 @@ public class GameMaster : MonoBehaviour {
     private GameObject _pc;
     private PlayerCharacter _pcScript;
 
-    private Vector3 _playerSpawnPointPos;      
+    public Vector3 _playerSpawnPointPos;      
 
 	// Use this for initialization
 	void Start () {
 
-        _playerSpawnPointPos = new Vector3(700, 32, 500); // 캐릭터 생성지점 디폴트값
+  //      _playerSpawnPointPos = new Vector3(900, 30, 300); // 캐릭터 생성지점 디폴트값
 
         GameObject go = GameObject.Find(GameSettings.PLAYER_SPAWN_POINT);
        

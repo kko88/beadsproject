@@ -6,6 +6,8 @@
     private int _buffValue; // 버프값
     private int _expToLevel; // 스킬에 필요한 경험치 양
     private float _levelModifier; // 레벨 제어
+    private string _name;   //속성 이름
+
 
     public BaseStat()
     {
@@ -14,7 +16,8 @@
         _baseValue = 0;
         _buffValue = 0;
         _levelModifier = 1.1f;
-        _expToLevel = STARTING_EXP_COST; 
+        _expToLevel = STARTING_EXP_COST;
+        _name = "";
     }
 
 #region Basic Setter and Getters
@@ -34,6 +37,13 @@
     {
         get { return _levelModifier; }
         set { _levelModifier = value; }
+    }
+
+    public string Name
+    {
+
+        get { return _name; }
+        set { _name = value; }
     }
 
     public int ExpToLevel

@@ -52,10 +52,10 @@ public class VitalBar : MonoBehaviour{
 
     public void OnChangeHealthBarSize(int curHealth, int maxHealth)
     {
-      //  Debug.Log("we heard on envent : curHealth = " + curHealth + "- maxHealth - " + maxHealth);
+       // Debug.Log("체력 : curHealth = " + curHealth + "- maxHealth - " + maxHealth);
 
-        _curBarLength = (int)(curHealth / (float)maxHealth) * _maxBarLength;			
-      //  _display.pixelInset = new Rect(_display.pixelInset.x, _display.pixelInset.y, _curBarLength, _display.pixelInset.height);
+        _curBarLength =(int)(curHealth / (float)maxHealth); //* _maxBarLength);		 	
+      // _display.pixelInset = new Rect(_display.pixelInset.x, _display.pixelInset.y, _curBarLength, _display.pixelInset.height);
         _display.pixelInset = CalculatePosition();
     }
 
@@ -71,7 +71,7 @@ public class VitalBar : MonoBehaviour{
 
         if (!_isPlayerHealthBar)
         {
-            float xPos = (_maxBarLength - _curBarLength) - (_maxBarLength / 4 + 10);
+            float xPos = (_maxBarLength - _curBarLength) - (_maxBarLength / 4+30);
             return new Rect(xPos, yPos, _curBarLength, _display.pixelInset.height);
         }
         return new Rect(_display.pixelInset.x, yPos, _curBarLength, _display.pixelInset.height);
