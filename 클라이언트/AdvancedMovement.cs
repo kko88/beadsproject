@@ -1,9 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// wasd - 전후좌우
+/// qe - 횡 이동
+/// space - 점프
+/// shift - 달리기 토글키 On/Off
+/// </summary>
 
 [RequireComponent(typeof(CharacterController))]
 public class AdvancedMovement : MonoBehaviour {
+
+
+    public enum State
+    {
+        Idle,
+        Init,
+        Setup,
+        Run
+    }
+    public enum Turn
+    {
+        left = -1,
+        none = 0,
+        right = 1
+    }
+
+    public enum Forward
+    {
+        back = -1,
+        none = 0,
+        forward =1
+    }
 
     public float walkSpeed = 10;
     public float runMultiplier = 2;   // 달리기 배수
@@ -12,7 +40,7 @@ public class AdvancedMovement : MonoBehaviour {
     public float gravity = 20;
     public float airTime = 0;
     public float fallTime = 0.5f;
-    public float jumpHeight = 8;  // 점프높이
+    public float jumpHeight = 10;  // 점프높이
     public float jumpTime = 1.5f;
     
     public CollisionFlags _collisionFlags;
@@ -20,41 +48,79 @@ public class AdvancedMovement : MonoBehaviour {
     private Transform _myTransform;
     private CharacterController _controller;
 
+    private Turn _turn;
+    private Forward _forward;
+    private Turn _strafe;
+    private bool _run;
+    private bool _jump;
+
+    private State _state;
+
     public void Awake()
     {
         _myTransform = transform;
         _controller = GetComponent<CharacterController>();
+        _state = AdvancedMovement.State.Init;
     }
 	
-	void Start () {
+	IEnumerator Start () {
 
+        while (true)
+        {
+            switch (_state)
+            {
+                case State.Init:
+                    Init();
+                    break;
+                case State.Setup:
+                    SetUp();    
+                    break;
+                case State.Run:
+                    ActionPicker();
+                    break;
+            }
+            yield return null;
+        }
+	}
+
+    private void Init()
+    {
+        if (!GetComponent<CharacterController>()) return;
+        if (!GetComponent<Animation>()) return;
+
+        _state = AdvancedMovement.State.Setup;
+    }
+    private void SetUp()
+    {
         _moveDirection = Vector3.zero;
         animation.Stop();
         animation.wrapMode = WrapMode.Loop;
         animation["jump"].layer = 1;
         animation["jump"].wrapMode = WrapMode.Once; // 점프 한번만
-        animation.Play("balance_idle"); 
+        animation.Play("balance_idle");
+        _turn = AdvancedMovement.Turn.none;
+        _forward = AdvancedMovement.Forward.none;
+        _strafe = Turn.none;
+        _run = true;        // 토글런 설정 On/Off
+        _jump = false;
 
-	}
-	
-
-	void Update () {
-
-        if (Input.GetButton("Rotate Player"))
-        {
-            _myTransform.Rotate(0, Input.GetAxis("Rotate Player") * Time.deltaTime * rotateSpeed, 0);
-        }
+        _state = AdvancedMovement.State.Run;
+    }
+    private void ActionPicker()
+    {
+      _myTransform.Rotate(0, (int)_turn * Time.deltaTime * rotateSpeed, 0);
+   
 
         if (_controller.isGrounded)
         {
             airTime = 0;
-            _moveDirection = new Vector3(0, 0, Input.GetAxis("Move Forward"));
-            _moveDirection = _myTransform.InverseTransformDirection(_moveDirection).normalized;
+            _moveDirection = new Vector3((int)_strafe, 0, (int)_forward);
+            _moveDirection = _myTransform.TransformDirection(_moveDirection).normalized;
             _moveDirection *= walkSpeed;
 
-            if (Input.GetButton("Move Forward"))
-            { 
-                if (Input.GetButton("Run"))
+            if (_forward != Forward.none)
+            {
+                if (_run)
                 {
                     _moveDirection *= runMultiplier;
                     Run();
@@ -64,17 +130,22 @@ public class AdvancedMovement : MonoBehaviour {
                     Walk();
                 }
             }
+            else if (_strafe != AdvancedMovement.Turn.none)
+            {
+                Strafe();
+            }
             else
             {
                 Idle();
             }
 
-            if (Input.GetButton("Jump"))
+            if (_jump)
             {
                 if (airTime < jumpTime)
                 {
                     _moveDirection.y += jumpHeight;
                     Jump();
+                    _jump = false; 
                 }
             }
         }
@@ -92,9 +163,34 @@ public class AdvancedMovement : MonoBehaviour {
         }
 
         _moveDirection.y -= gravity * Time.deltaTime;
-     _collisionFlags = _controller.Move(_moveDirection * Time.deltaTime);
-	}
+        _collisionFlags = _controller.Move(_moveDirection * Time.deltaTime);
+    }
 
+
+    public void MoveMeForward(Forward z)
+    {
+        _forward = z;
+    }
+
+    public void ToggleRun()
+    {
+        _run =! _run;  //   토글설정
+    }
+
+    public void RotateMe(Turn y)
+    {
+        _turn = y;
+    }
+
+    public void Strafe(Turn x)
+    {
+        _strafe = x;
+    }
+
+    public void JumpUp()
+    {
+        _jump = true;
+    }
     public void Idle()
     {
         animation.CrossFade("balance_idle");
@@ -108,14 +204,14 @@ public class AdvancedMovement : MonoBehaviour {
     {
         animation["run2"].speed = 1.5f;
         animation.CrossFade("run2");
-    }
+    }               
     public void Jump()
     {
         animation.CrossFade("jump");
     }
     public void Strafe()
     {
-        animation.CrossFade("turn");
+        animation.CrossFade("roll_side");
     }
 
     public void Fall()
