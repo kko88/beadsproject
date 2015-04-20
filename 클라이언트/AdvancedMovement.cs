@@ -33,12 +33,12 @@ public class AdvancedMovement : MonoBehaviour {
         forward =1
     }
 
-    public float walkSpeed = 10;
+    public float walkSpeed = 7;
     public float runMultiplier = 2;   // 달리기 배수
     public float strafeSpeed = 8.0f;  // 횡이동
     public float rotateSpeed = 250;
     public float gravity = 20;
-    public float airTime = 0;
+    public float airTime = 0;  
     public float fallTime = 0.5f;
     public float jumpHeight = 10;  // 점프높이
     public float jumpTime = 1.5f;
@@ -95,7 +95,7 @@ public class AdvancedMovement : MonoBehaviour {
         _moveDirection = Vector3.zero;
         animation.Stop();
         animation.wrapMode = WrapMode.Loop;
-        animation["jump"].layer = 1;
+        animation["jump"].layer = -1;
         animation["jump"].wrapMode = WrapMode.Once; // 점프 한번만
         animation.Play("balance_idle");
         _turn = AdvancedMovement.Turn.none;
@@ -147,6 +147,7 @@ public class AdvancedMovement : MonoBehaviour {
                     Jump();
                     _jump = false; 
                 }
+ 
             }
         }
         else

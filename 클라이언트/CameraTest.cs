@@ -9,7 +9,7 @@ using System.Collections;
 public class CameraTest : MonoBehaviour {
 
     public Transform target;
-    public string playerTagName = "Character1";
+    public string playerTagName = "Player";
 
     public float walkDistance;
     public float runDistance;

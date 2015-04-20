@@ -93,8 +93,8 @@ public class MobMove : MonoBehaviour
         _moveDirection = Vector3.zero;
         animation.Stop();
         animation.wrapMode = WrapMode.Loop;
-  //      animation["jump"].layer = -1;
-  //      animation["jump"].wrapMode = WrapMode.Once; // 점프 한번만
+        animation["jump"].layer = -1;
+        animation["jump"].wrapMode = WrapMode.Once; // 점프 한번만
         animation.Play("Idle");
         _turn = MobMove.Turn.none;
         _forward = MobMove.Forward.none;
@@ -155,7 +155,7 @@ public class MobMove : MonoBehaviour
                 airTime += Time.deltaTime;
                 if (airTime > fallTime)
                 {
-                    Fall();
+             //       Fall();
                 }
             }
 
@@ -217,5 +217,5 @@ public class MobMove : MonoBehaviour
     {
         animation.CrossFade("fall");
     }
-
+    
 }

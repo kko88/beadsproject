@@ -6,7 +6,7 @@ public class Movement : MonoBehaviour
 {
     public float moveSpeed = 10;
     public float runMultiplier = 2;   // 달리기 배수
-    public float strafeSpeed = 8.0f;
+    public float strafeSpeed = 8.0f;  // 횡이동
     public float rotateSpeed = 250;
 
     private Transform _myTransform;
@@ -22,7 +22,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         animation.wrapMode = WrapMode.Loop;
-        animation["balance_idle"].wrapMode = WrapMode.Loop;
+        animation["idle1"].wrapMode = WrapMode.Loop;
     }
 
     // Update is called once per frame
@@ -51,19 +51,19 @@ public class Movement : MonoBehaviour
         {
             if (Input.GetButton("Run"))
             {
-                animation.CrossFade("run2");
+                animation.CrossFade("run1");
                 _controller.SimpleMove(_myTransform.TransformDirection(Vector3.forward) * Input.GetAxis("Move Forward") * moveSpeed * runMultiplier);
             }
 
             else {
-            animation["balance_walk"].speed = 2;
-            animation.CrossFade("balance_walk");
+            animation["walk1"].speed = 2;
+            animation.CrossFade("walk1");
             _controller.SimpleMove(_myTransform.TransformDirection(Vector3.forward) * Input.GetAxis("Move Forward") * moveSpeed);
                 }
             }
         else
         {
-            animation.CrossFade("balance_idle");
+            animation.CrossFade("idle1");
         }
     }
 
@@ -71,9 +71,9 @@ public class Movement : MonoBehaviour
     {
         if (Mathf.Abs(Input.GetAxis("Strafe")) > 0)
         {
-            animation.CrossFade("turn");
-            _controller.SimpleMove(_myTransform.TransformDirection(Vector3.right) * Input.GetAxis("Strafe") * strafeSpeed);
-        }
+           animation.CrossFade("strafe1");
+           _controller.SimpleMove(_myTransform.TransformDirection(Vector3.right) * Input.GetAxis("Strafe") * strafeSpeed);
+         }
 
     }
 
