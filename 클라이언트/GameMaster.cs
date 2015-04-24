@@ -25,13 +25,13 @@ public class GameMaster : MonoBehaviour {
        
         if (go == null)
         {
-            Debug.LogWarning("캐릭터 생성지점을 찾을수 없습니다");
+         //   Debug.LogWarning("캐릭터 생성지점을 찾을수 없습니다");
             
             go = new GameObject(GameSettings.PLAYER_SPAWN_POINT);
-            Debug.Log("캐릭터 생성지점");
+         //   Debug.Log("캐릭터 생성지점");
 
             go.transform.position = _playerSpawnPointPos;
-            Debug.Log("캐릭터 생성지점 이동");
+         //   Debug.Log("캐릭터 생성지점 이동");
 
         }
         _pc = Instantiate(playerCharacter,go.transform.position, Quaternion.identity) as GameObject;

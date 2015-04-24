@@ -11,6 +11,12 @@ public class PlayerInput : MonoBehaviour {
 	}
 	
 	void Update () {
+
+        if (Input.GetButtonUp("Toggle Inventory"))
+        {
+           Messenger.Broadcast("ToggleInventory");
+        }
+
         if (Input.GetButton("Move Forward"))
         {
             if (Input.GetAxis("Move Forward") > 0)

@@ -24,7 +24,7 @@
     public int MaxDamage
     {
         get{return _maxDamage;}
-        set{_maxDamage = Value;}
+        set{_maxDamage = value;}
     }
 
     public float DamageVariance               // 데미지 변화량
@@ -43,6 +43,14 @@
     {
         get { return _dmgType; }
         set { _dmgType = value; }
+    }
+
+    public override string ToolTip()
+    {
+        return Name + "\n" +
+              "가치" + Value + "\n" +
+              "내구도" + CurDurability + "/" + MaxDurability + "\n" +
+              MaxDamage * DamageVariance + " - " + MaxDamage;
     }
 
 }

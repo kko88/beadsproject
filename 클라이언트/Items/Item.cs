@@ -2,11 +2,11 @@
 
 public class Item {
     private string _name;
-    private int _value;
+    private int _value; 
     private RarityTypes _rarity;
     private int _curDur; // 내구도
     private int _maxDur;
-
+    private Texture2D _icon;
     public Item()
     {
         _name = "Need Name";
@@ -55,8 +55,19 @@ public class Item {
         set { _curDur = value; }
     }
 
+    public Texture2D Icon
+    {
+        get { return _icon; }
+        set { _icon = value; }
 
+    }
 
+    public virtual string ToolTip()
+    {
+        return Name + "\n" +
+                   "가치" + Value + "\n" +
+                   "내구도" + CurDurability + "/" + MaxDurability + "\n";
+    }
 }
 
 //아이템 등급 종류

@@ -106,7 +106,7 @@ public class Chest : MonoBehaviour
            audio.PlayOneShot(openSound);
 
            if(!_used)   // 사용되었던 상자가아니면 5개의 랜덤 아이템 생성 (디폴트값 false)
-           PopulateChest(5);
+           PopulateChest(5);    
 
            yield return new WaitForSeconds(animation["box_open"].length);
            state = Chest.State.open;
@@ -114,13 +114,13 @@ public class Chest : MonoBehaviour
            Messenger.Broadcast("DisplayLoot");
        }
 
-       private void PopulateChest(int x)
+       private void PopulateChest(int x) 
        {
            for (int cnt = 0; cnt < x; cnt++)
            {           
-               loot.Add(new Item());
-               loot[cnt].Name = "N:" + Random.Range(0, 100);
+               loot.Add(ItemGenerator.CreateItem());
            }
+
            _used = true;
        }
 

@@ -33,7 +33,7 @@ public class AdvancedMovement : MonoBehaviour {
         forward =1
     }
 
-    public float walkSpeed = 7;
+    public float walkSpeed = 5;
     public float runMultiplier = 2;   // 달리기 배수
     public float strafeSpeed = 8.0f;  // 횡이동
     public float rotateSpeed = 250;

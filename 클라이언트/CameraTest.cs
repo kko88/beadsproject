@@ -31,7 +31,7 @@ public class CameraTest : MonoBehaviour {
     }
 	void Start () {
         if (target == null)
-            Debug.LogWarning("타겟이 없습니다.");
+            Debug.Log("타겟이 없습니다.");
        else
         {
            CameraSetup();
@@ -84,31 +84,30 @@ public class CameraTest : MonoBehaviour {
 //                _myTransform.position = new Vector3(target.position.x, target.position.y + height, target.position.z - walkDistance);
 //                _myTransform.LookAt(target);
      
-                // Calculate the current rotation angles
+                
                 float wantedRotationAngle = target.eulerAngles.y;
                 float wantedHeight = target.position.y + height;
 
                 float currentRotationAngle = _myTransform.eulerAngles.y;
                 float currentHeight = _myTransform.position.y;
 
-                // Damp the rotation around the y-axis
+                
                 currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
 
-                // Damp the height
+               
                 currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
 
-                // Convert the angle into a rotation
+              
                 Quaternion currentRotation = Quaternion.Euler(0, currentRotationAngle, 0);
 
-                // Set the position of the camera on the x-z plane to:
-                // distance meters behind the target
+               
                 _myTransform.position = target.position;
                 _myTransform.position -= currentRotation * Vector3.forward * walkDistance;
                 
-                // Set the height of the camera
+                
                 _myTransform.position = new Vector3(_myTransform.position.x,  currentHeight, _myTransform.position.z);
 
-                // Always look at the target
+               
                 _myTransform.LookAt(target);
 
             }

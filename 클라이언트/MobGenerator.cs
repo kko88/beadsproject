@@ -47,7 +47,7 @@ public class MobGenerator : MonoBehaviour
 
     private void Initialize()
     {
-        Debug.Log("초기내용 설정");
+ //       Debug.Log("초기내용 설정");
 
         if (!CheckForMobPrefabs())
             return;
@@ -60,13 +60,13 @@ public class MobGenerator : MonoBehaviour
 
     private void Setup()
     {
-        Debug.Log("셋업 설정");
+//        Debug.Log("셋업 설정");
         state = MobGenerator.State.SpawnMob;
     }
 
     private void SpawnMob()
     {
-        Debug.Log("몹 스폰");
+  //      Debug.Log("몹 스폰");
 
         GameObject[] gos = AvailableSpawnPoints();
 
@@ -109,7 +109,7 @@ public class MobGenerator : MonoBehaviour
         {
             if (spawnPoints[cnt].transform.childCount == 0)
             {
-                Debug.Log("사용 가능한 스폰 포인트");
+//                Debug.Log("사용 가능한 스폰 포인트");
                 gos.Add(spawnPoints[cnt]);
             }
         }
