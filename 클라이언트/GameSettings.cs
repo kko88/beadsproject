@@ -4,7 +4,10 @@ using System;
 public class GameSettings : MonoBehaviour {
 
     public const string PLAYER_SPAWN_POINT = "Player Spawn Point"; // 캐릭터 생성 지점
-
+    // 0 - 메인메뉴
+    // 1 - 캐릭터 생성창
+    // 2 - 튜토리얼
+    public static string[] levelNames = new string[3] { "Main Menu", "Character Generator", "Tutorial" };
     void Awake()
     { 
         DontDestroyOnLoad(this);
@@ -18,7 +21,7 @@ public class GameSettings : MonoBehaviour {
 
         PlayerCharacter pcClass = pc.GetComponent<PlayerCharacter>();
 
-        PlayerPrefs.DeleteAll();
+     //   PlayerPrefs.DeleteAll();
 
         PlayerPrefs.SetString("Player Name", pcClass.Name);
 
@@ -82,7 +85,7 @@ public class GameSettings : MonoBehaviour {
          
         for (int cnt = 0; cnt < Enum.GetValues(typeof(SkillName)).Length; cnt++)
         {
-            Debug.Log(((SkillName)cnt).ToString() + ":  " + pcClass.GetSkill(cnt).BaseValue + " - " + pcClass.GetSkill(cnt).ExpToLevel);
+//            Debug.Log(((SkillName)cnt).ToString() + ":  " + pcClass.GetSkill(cnt).BaseValue + " - " + pcClass.GetSkill(cnt).ExpToLevel);
         }
     }
 }

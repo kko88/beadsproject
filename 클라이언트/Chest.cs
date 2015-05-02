@@ -31,7 +31,11 @@ public class Chest : MonoBehaviour
     private bool _used = false;  // 상자가 사용되었는지 여부
 
     public List<Item> loot = new List<Item>();
-      void Start()
+
+    public static float defaultLifeTimer = 100;
+    private float _lifeTimer = 0;
+    
+    void Start()
        {
            _myTransform = transform;
            state = Chest.State.close;
@@ -46,6 +50,11 @@ public class Chest : MonoBehaviour
 
       void Update()
       {
+          _lifeTimer += Time.deltaTime;
+
+          if (_lifeTimer > defaultLifeTimer && state == Chest.State.close)
+              DestroyChest();
+
           if (!inUse)
               return;
 
@@ -129,15 +138,27 @@ public class Chest : MonoBehaviour
            _player = null;
            inUse = false;
            animation.Play("box_close");
-           audio.PlayOneShot(closeSound); 
-           yield return new WaitForSeconds(animation["box_close"].length);
+           audio.PlayOneShot(closeSound);
+
+           float tempTimer = animation["box_close"].length;
+
+           if (closeSound.length > tempTimer)
+               tempTimer = closeSound.length;
+
+           yield return new WaitForSeconds(tempTimer);
            state = Chest.State.close;
 
            if (loot.Count == 0)
-               Destroy(gameObject);    // 상자에 아이템이 없으면 상자 삭제
+               DestroyChest();   // 상자에 아이템이 없으면 상자 삭제
            
        }
 
+
+       private void DestroyChest()
+       {
+           loot = null;
+           Destroy(gameObject);
+       }
        public void ForceClose()
        {
            Messenger.Broadcast("CloseChest");

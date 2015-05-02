@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[AddComponentMenu("게임마스터/타겟팅")]
 public class TargetMob : MonoBehaviour
 {
     public List<Transform> targets; // transform 리스트

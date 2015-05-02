@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("스폰포인트/스폰포인트")]
 public class SpawnPoint : MonoBehaviour {
 
     public void OnDrawGizmos()
     {
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawCube(transform.position, new Vector3(2, 2, 2));
-        Gizmos.DrawIcon(transform.position, "spawnpoint1.jpg");
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, 2);
+    //   Gizmos.DrawIcon(transform.position, "spawnpoint1.jpg");
     }
 
 }

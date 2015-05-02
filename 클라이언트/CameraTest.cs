@@ -6,16 +6,18 @@ using System.Collections;
 /// 우측 넘버패드 3,9번 
 /// 마우스 우클릭 자유회전
 /// </summary>
+
+[AddComponentMenu("카메라/메인카메라")]
 public class CameraTest : MonoBehaviour {
 
     public Transform target;
-    public string playerTagName = "Player";
+    public string cameraTagName = "Player";
 
-    public float walkDistance;
-    public float runDistance;
-    public float height;
+    public float walkDistance = 6;
+    public float runDistance = 10;
+    public float height = 4;
     public float xSpeed = 250.0f;
-    public float ySpeed = 120.0f;
+    public float ySpeed = 120.0f; 
     public float heightDamping = 2.0f;
     public float rotationDamping = 3.0f;    
 
@@ -116,7 +118,7 @@ public class CameraTest : MonoBehaviour {
 
         else
         {
-            GameObject go = GameObject.FindGameObjectWithTag(playerTagName);
+            GameObject go = GameObject.FindGameObjectWithTag(cameraTagName);
 
             if (go == null)
                 return;

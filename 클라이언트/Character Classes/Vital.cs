@@ -6,7 +6,7 @@ public class Vital : ModifiedStat{
 
     public Vital()
     {
-        Debug.Log("바이탈 생성");
+//        Debug.Log("바이탈 생성");
         _curValue = 0;
         ExpToLevel = 40;
         LevelModifier = 1.1f;

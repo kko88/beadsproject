@@ -30,8 +30,16 @@ public class AdvancedMovement : MonoBehaviour {
     {
         back = -1,
         none = 0,
-        forward =1
+        forward =1 
     }
+
+    public string idleAnimName;
+    public string walkAnimName;
+    public string runAnimName;
+    public string jumpAnimName;
+    public string strafeAnimName;
+    public string fallAnimName;
+
 
     public float walkSpeed = 5;
     public float runMultiplier = 2;   // 달리기 배수
@@ -43,7 +51,7 @@ public class AdvancedMovement : MonoBehaviour {
     public float jumpHeight = 10;  // 점프높이
     public float jumpTime = 1.5f;
     
-    public CollisionFlags _collisionFlags;
+    private CollisionFlags _collisionFlags;
     private Vector3 _moveDirection; 
     private Transform _myTransform;
     private CharacterController _controller;
@@ -95,9 +103,12 @@ public class AdvancedMovement : MonoBehaviour {
         _moveDirection = Vector3.zero;
         animation.Stop();
         animation.wrapMode = WrapMode.Loop;
-        animation["jump"].layer = -1;
-        animation["jump"].wrapMode = WrapMode.Once; // 점프 한번만
-        animation.Play("balance_idle");
+        if (jumpAnimName != "")
+        {
+            animation[jumpAnimName].layer = -1;
+            animation[jumpAnimName].wrapMode = WrapMode.Once; // 점프 한번만
+        }
+        animation.Play(idleAnimName);
         _turn = AdvancedMovement.Turn.none;
         _forward = AdvancedMovement.Forward.none;
         _strafe = Turn.none;
@@ -194,30 +205,42 @@ public class AdvancedMovement : MonoBehaviour {
     }
     public void Idle()
     {
-        animation.CrossFade("balance_idle");
+        if (idleAnimName == "")
+            return;
+        animation.CrossFade(idleAnimName);
     }
 
     public void Walk()
     {
-        animation.CrossFade("balance_walk");
+        if (walkAnimName == "")
+            return;
+        animation.CrossFade(walkAnimName);
     }
     public void Run()
     {
-        animation["run2"].speed = 1.5f;
-        animation.CrossFade("run2");
+        if (runAnimName == "")
+            return;
+        animation[runAnimName].speed = 1.5f;
+        animation.CrossFade(runAnimName);
     }               
     public void Jump()
     {
-        animation.CrossFade("jump");
+        if (jumpAnimName == "")
+            return;
+        animation.CrossFade(jumpAnimName);
     }
     public void Strafe()
     {
-        animation.CrossFade("roll_side");
+        if (strafeAnimName == "")
+            return;
+        animation.CrossFade(strafeAnimName);
     }
 
     public void Fall()
     {
-        animation.CrossFade("fall");
+        if (fallAnimName == "")
+            return;
+        animation.CrossFade(fallAnimName);
     }
 
 }

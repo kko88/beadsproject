@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
+[AddComponentMenu("캐릭터/모든 스크립트")]
 [RequireComponent(typeof(AdvancedMovement))]
+[RequireComponent(typeof(PlayerCharacter))]
 public class PlayerInput : MonoBehaviour {
 
 
@@ -15,6 +16,12 @@ public class PlayerInput : MonoBehaviour {
         if (Input.GetButtonUp("Toggle Inventory"))
         {
            Messenger.Broadcast("ToggleInventory");
+        }
+
+
+        if (Input.GetButtonUp("Toggle Character Window"))
+        {
+            Messenger.Broadcast("ToggleCharacterWindow");
         }
 
         if (Input.GetButton("Move Forward"))
@@ -75,7 +82,7 @@ public class PlayerInput : MonoBehaviour {
             SendMessage("Strafe", AdvancedMovement.Turn.none);
         }
 
-        if (Input.GetButton("Jump"))
+        if (Input.GetButtonUp("Jump"))
         {
             SendMessage("JumpUp");
         }
@@ -83,7 +90,7 @@ public class PlayerInput : MonoBehaviour {
 
         if (Input.GetButtonUp("Run"))
         {
-            SendMessage("ToggleRun");  // 달리기 On/Off 
+            SendMessage("ToggleRun");  // 달리기 On/Off  
         }
 
 	}

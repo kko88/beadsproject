@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("게임마스터/게임마스터")]
 public class GameMaster : MonoBehaviour {
 
     public GameObject playerCharacter;

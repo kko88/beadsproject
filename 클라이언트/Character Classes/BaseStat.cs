@@ -11,7 +11,7 @@
 
     public BaseStat()
     {
-        UnityEngine.Debug.Log("초기값 생성");
+//        UnityEngine.Debug.Log("초기값 생성");
 
         _baseValue = 0;
         _buffValue = 0;

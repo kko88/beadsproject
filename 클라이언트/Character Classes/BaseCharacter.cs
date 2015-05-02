@@ -12,7 +12,7 @@ public class BaseCharacter : MonoBehaviour {
     private Vital[] _vital;
     private Skill[] _skill;
 
-    public void Awake()
+    public virtual void Awake()
     {
         _name = string.Empty;
         _level = 0;

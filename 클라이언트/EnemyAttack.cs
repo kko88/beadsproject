@@ -41,7 +41,7 @@ public class EnemyAttack : MonoBehaviour
         float distance = Vector3.Distance(target.transform.position, transform.position);
         Vector3 dir = (target.transform.position - transform.position).normalized;
         float direction = Vector3.Dot(dir, transform.forward);
-        Debug.Log(direction); //로그 출력
+//        Debug.Log(direction); //로그 출력
 
         if (distance < 2.0f)
         {

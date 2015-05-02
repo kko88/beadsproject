@@ -25,7 +25,8 @@ public class CharacterGenerator : MonoBehaviour
 
     public GameObject playerPrefab;
 
-
+    public float delayTimer = 0.25f;
+    private float _lastClick = 0;
 
     // Use this for initialization
     void Start()
@@ -97,34 +98,45 @@ public class CharacterGenerator : MonoBehaviour
                 BASEVALUE_LABEL_WIDTH,                  // 넓이
                 LINE_HEIGHT                             // 높이
                 ), _toon.GetPrimaryAttribute(cnt).AdjustedBaseValue.ToString());
-            if (GUI.Button(new Rect(                                // 버튼
+            if (GUI.RepeatButton(new Rect(                                // 버튼
                 OFFSET + STAT_LABEL_WIDTH + BASEVALUE_LABEL_WIDTH,  // x
                 statStartingPos + (cnt * BUTTON_HEIGHT),            // y
                 BUTTON_WIDTH,                                       // 넓이
                 BUTTON_HEIGHT                                       // 높이
                 ), "-")) 
             {
-                if (_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE)
+                if (Time.time - _lastClick > delayTimer)
                 {
-                    _toon.GetPrimaryAttribute(cnt).BaseValue--;
-                    pointsLeft++;
+                    if (_toon.GetPrimaryAttribute(cnt).BaseValue > MIN_STARTING_ATTRIBUTE_VALUE)
+                    {
+                        _toon.GetPrimaryAttribute(cnt).BaseValue--;
+                        pointsLeft++;
 
-                    _toon.StatUpdate();
+                        _toon.StatUpdate();
+                    }
+
+                    _lastClick = Time.time;
                 }
+        
+        
             }
-            if (GUI.Button(new Rect(
+            if (GUI.RepeatButton(new Rect(
                 OFFSET + STAT_LABEL_WIDTH + BASEVALUE_LABEL_WIDTH + BUTTON_WIDTH,  // x
                 statStartingPos + (cnt * BUTTON_HEIGHT),                           // y
                 BUTTON_WIDTH,                                                      // 넓이
                 BUTTON_HEIGHT                                                      // 높이
                 ), "+")) 
             {
-                if (pointsLeft > 0)
+                if (Time.time - _lastClick > delayTimer)
                 {
-                    _toon.GetPrimaryAttribute(cnt).BaseValue++;
-                    pointsLeft--;
+                    if (pointsLeft > 0)
+                    {
+                        _toon.GetPrimaryAttribute(cnt).BaseValue++;
+                        pointsLeft--;
 
-                    _toon.StatUpdate();
+                        _toon.StatUpdate();
+                    }
+                    _lastClick = Time.time;
                 }
             }
         }
@@ -181,7 +193,7 @@ public class CharacterGenerator : MonoBehaviour
             GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
             UpdateCurVitalValues();
             gsScript.SaveCharacterData();
-            Application.LoadLevel("Level1");
+            Application.LoadLevel(GameSettings.levelNames[2]);
         }
     }
 

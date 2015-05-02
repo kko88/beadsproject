@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+
+[AddComponentMenu("게임마스터/몹 제너레이터")]
 public class MobGenerator : MonoBehaviour
 {
 

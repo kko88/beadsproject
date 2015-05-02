@@ -6,7 +6,7 @@ public class ModifiedStat : BaseStat {
     private int _modValue;     
 
     public ModifiedStat(){
-        UnityEngine.Debug.Log("수정된 스탯");
+//        UnityEngine.Debug.Log("수정된 스탯");
         _mods = new List<ModifyingAttribute>(); 
         _modValue = 0;
     }
@@ -59,7 +59,7 @@ public struct ModifyingAttribute{
 
     public ModifyingAttribute(Attribute att, float rat)
     {
-        UnityEngine.Debug.Log("수정할 속성 생성");
+//        UnityEngine.Debug.Log("수정할 속성 생성");
         attribute = att;
         ratio = rat;
     }

@@ -31,7 +31,7 @@ public static class ItemGenerator  {
     {
         Weapon meleeWeapon = new Weapon();
 
-        string[] weaponNames = new string[7];
+        string[] weaponNames = new string[8];
         weaponNames[0] = "단검";
         weaponNames[1] = "마법책";
         weaponNames[2] = "화살";
@@ -39,6 +39,7 @@ public static class ItemGenerator  {
         weaponNames[4] = "불";
         weaponNames[5] = "대지";
         weaponNames[6] = "번개";
+        weaponNames[7] = "활";
 
 
         meleeWeapon.Name = weaponNames[Random.Range(0, weaponNames.Length)];
