@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[AddComponentMenu("오브젝트/상자")]
 [RequireComponent(typeof(BoxCollider))]
 [RequireComponent(typeof(AudioSource))]
 public class Chest : MonoBehaviour
@@ -14,6 +15,8 @@ public class Chest : MonoBehaviour
         inbetween
     }
 
+    public string openAnimName;
+    public string closeAnimName;
     public AudioClip openSound;
     public AudioClip closeSound;
 
@@ -21,13 +24,13 @@ public class Chest : MonoBehaviour
     public GameObject[] parts;  // 상자 부분 ,top이랑 전체로 나뉘어짐
     private Color[] _defaultColors; // 색 초기값
 
-    public State state;
+    private State state;
 
     public float maxDistance = 2;
 
     private GameObject _player;
     private Transform _myTransform;
-    public bool inUse = false;
+    private bool inUse = false;
     private bool _used = false;  // 상자가 사용되었는지 여부
 
     public List<Item> loot = new List<Item>();
@@ -110,14 +113,14 @@ public class Chest : MonoBehaviour
            _player = GameObject.FindGameObjectWithTag("Player");  // 상자가 플레이어 찾아서 거리재기
            inUse = true;
 
-           animation.Play("box_open");
+           animation.Play(openAnimName);
 
            audio.PlayOneShot(openSound);
 
            if(!_used)   // 사용되었던 상자가아니면 5개의 랜덤 아이템 생성 (디폴트값 false)
-           PopulateChest(5);    
+           PopulateChest(1);    
 
-           yield return new WaitForSeconds(animation["box_open"].length);
+           yield return new WaitForSeconds(animation[openAnimName].length);
            state = Chest.State.open;
 
            Messenger.Broadcast("DisplayLoot");
@@ -137,13 +140,17 @@ public class Chest : MonoBehaviour
        {
            _player = null;
            inUse = false;
-           animation.Play("box_close");
+           animation.Play(closeAnimName);
            audio.PlayOneShot(closeSound);
 
-           float tempTimer = animation["box_close"].length;
-
-           if (closeSound.length > tempTimer)
-               tempTimer = closeSound.length;
+           float tempTimer = 0;
+           
+           if(closeAnimName != "")
+               tempTimer = animation[closeAnimName].length;
+           
+           if(closeSound != null)
+                if (closeSound.length > tempTimer)
+                     tempTimer = closeSound.length;
 
            yield return new WaitForSeconds(tempTimer);
            state = Chest.State.close;

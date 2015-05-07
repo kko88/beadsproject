@@ -8,7 +8,7 @@ public class TargetMob : MonoBehaviour
     public List<Transform> targets; // transform 리스트
     public Transform selectedTarget;
     private Transform myTransform;
-    // Use this for initialization
+
     void Start()
     {
 
@@ -82,7 +82,7 @@ public class TargetMob : MonoBehaviour
 
         if (name == null)
         {
-            Debug.LogError("선택된 몹이 없습니다." + selectedTarget.name);
+            Debug.Log("선택된 몹이 없습니다." + selectedTarget.name);
             return;
         }
      
@@ -90,7 +90,7 @@ public class TargetMob : MonoBehaviour
         name.GetComponent<MeshRenderer>().enabled = true;
         selectedTarget.GetComponent<Mob>().DisplayHealth();
 
-        Messenger<bool>.Broadcast("몹 체력 보기", true);
+    //    Messenger<bool>.Broadcast("몹 체력 보기", true);
     }
 
     private void DeselectTarget() // 선택안된 나머지 
@@ -99,9 +99,9 @@ public class TargetMob : MonoBehaviour
         selectedTarget = null;
 
 
-        Messenger<bool>.Broadcast("몹 체력 보기", false);
+   //     Messenger<bool>.Broadcast("몹 체력 보기", false);
     }
-    // Update is called once per frame
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab)) // tab키로 타겟잡기

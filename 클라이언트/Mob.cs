@@ -18,17 +18,24 @@ public class Mob : BaseCharacter{
 //        GetPrimaryAttribute((int)AttributeName.건강).BaseValue = 100;
 //        GetVital((int)VitalName.체력).Update();
 
-        Name = "Golem";
+        Transform displayName = transform.FindChild("Name");
+        if (displayName == null)
+        {
+//            Debug.Log("이름표시");
+            return;
+        }
+
+        displayName.GetComponent<MeshRenderer>().enabled = false;
+        Name = "TEST";
     }
 
-    // Update is called once per	 frame
     void Update()
     {
     }
 
     public void DisplayHealth()
     {
-        Messenger<int, int>.Broadcast("몹 체력 업데이트", curHealth, maxHealth);
+  //      Messenger<int, int>.Broadcast("몹 체력 업데이트", curHealth, maxHealth);
 
     }
 }

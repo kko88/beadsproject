@@ -16,18 +16,18 @@ public class MobGenerator : MonoBehaviour
     public GameObject[] mobPrefabs; 			
     public GameObject[] spawnPoints;			
 
-    public State state;							
+    private State _state;							
 
     void Awake()
     {
-        state = MobGenerator.State.Initialize;
+        _state = MobGenerator.State.Initialize;
     }
     // Use this for initialization
     IEnumerator Start()
     {
         while (true)
         {
-            switch (state)
+            switch (_state)
             {
 
                 case State.Initialize:
@@ -57,13 +57,13 @@ public class MobGenerator : MonoBehaviour
         if (!CheckForSpawnPoints())
             return;
 
-        state = MobGenerator.State.Setup;
+        _state = MobGenerator.State.Setup;
     }
 
     private void Setup()
     {
 //        Debug.Log("셋업 설정");
-        state = MobGenerator.State.SpawnMob;
+        _state = MobGenerator.State.SpawnMob;
     }
 
     private void SpawnMob()
@@ -80,7 +80,7 @@ public class MobGenerator : MonoBehaviour
             go.transform.parent = gos[cnt].transform;
         }
 
-        state = MobGenerator.State.Idle;
+        _state = MobGenerator.State.Idle;
     }
 
     

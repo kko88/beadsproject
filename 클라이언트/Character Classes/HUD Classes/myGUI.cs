@@ -2,9 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+[AddComponentMenu("게임마스터/창,버튼 세팅")]
 public class myGUI : MonoBehaviour {
 
     public GUISkin mySkin;
+
+    public string emptyInventorySlotStyle;  // 인벤 빈칸 슬롯 스타일
+    public string closeButtonStyle;         
+    public string inventorySlotCommonStyle;  //인벤 아이템 슬롯 스타일  
 
     public float lootwindowHeight = 90;
 
@@ -25,7 +31,7 @@ public class myGUI : MonoBehaviour {
     private string _toolTip = "";
 
     // 인벤토리창 변수
-    private bool _displayInventoryWindow = true;
+    private bool _displayInventoryWindow = false;
     private const int INVENTORY_WINDOW_ID = 1;
     private Rect _inventorywindowRect = new Rect(10, 10, 170, 265);   // 인벤토리창 모양,크기
     private int _inventoryRows = 6;  // 열
@@ -36,7 +42,7 @@ public class myGUI : MonoBehaviour {
     private Item _selectedItem;
 
     // 캐릭터창 변수
-    private bool _displayCharacterWindow = true;
+    private bool _displayCharacterWindow = false;
     private const int CHARACTER_WINDOW_ID = 2;
     private Rect _characterwindowRect = new Rect(10, 10, 170, 265);   // 인벤토리창 모양,크기
     private int _characterPanel = 0;
@@ -84,7 +90,7 @@ public class myGUI : MonoBehaviour {
         GUI.skin = mySkin;
 
 
-        if(GUI.Button(new Rect(_lootwindowRect.width - _offset * 2, 0, closeButtonWidth, closeButtonHeight),"","Close Window Button"))
+        if(GUI.Button(new Rect(_lootwindowRect.width - _offset * 2, 0, closeButtonWidth, closeButtonHeight),"",closeButtonStyle))
             ClearWindow();
 
         if (chest == null)
@@ -96,11 +102,11 @@ public class myGUI : MonoBehaviour {
             return;
         }
 
-        _lootWindowSlider = GUI.BeginScrollView(new Rect(_offset * 0.5f, 15, _lootwindowRect.width - 10, 70), _lootWindowSlider, new Rect(0, 0, (chest.loot.Count * buttonWidth) + _offset, buttonHeight + _offset));
+       _lootWindowSlider = GUI.BeginScrollView(new Rect(_offset * 0.5f, 15, _lootwindowRect.width - 10, 70), _lootWindowSlider, new Rect(0, 0, (chest.loot.Count * buttonWidth) + _offset, buttonHeight + _offset));
 
         for (int cnt = 0; cnt < chest.loot.Count; cnt++)
         {   // 아이템 루팅 슬롯 사각형
-           if (GUI.Button(new Rect(_offset * 0.5f +(buttonWidth * cnt), _offset, buttonWidth, buttonHeight),new GUIContent(chest.loot[cnt].Icon , chest.loot[cnt].ToolTip()), "Inventory Slot"))
+            if (GUI.Button(new Rect(_offset * 0.5f + (buttonWidth * cnt), _offset, buttonWidth, buttonHeight), new GUIContent(chest.loot[cnt].Icon, chest.loot[cnt].ToolTip()), inventorySlotCommonStyle))
            {
                PlayerCharacter.Inventory.Add(chest.loot[cnt]);
                chest.loot.RemoveAt(cnt);  // 아이템 선택하면 삭제
@@ -132,7 +138,7 @@ public class myGUI : MonoBehaviour {
             {
                 if (cnt < PlayerCharacter.Inventory.Count)
                 {
-                    if (GUI.Button(new Rect(5 + (x * buttonWidth), 20 + (y * buttonHeight), buttonWidth, buttonHeight), new GUIContent(PlayerCharacter.Inventory[cnt].Icon, PlayerCharacter.Inventory[cnt].ToolTip()), "Inventory Slot"))
+                    if (GUI.Button(new Rect(5 + (x * buttonWidth), 20 + (y * buttonHeight), buttonWidth, buttonHeight), new GUIContent(PlayerCharacter.Inventory[cnt].Icon, PlayerCharacter.Inventory[cnt].ToolTip()), inventorySlotCommonStyle))
                     {
                         if (_doubleClickTimer != 0 && _selectedItem != null)
                         {
@@ -171,7 +177,7 @@ public class myGUI : MonoBehaviour {
                 }
                 else
                 {
-                    GUI.Label(new Rect(5 + (x * buttonWidth), 20 + (y * buttonHeight), buttonWidth, buttonHeight), (x + y * _inventoryCols).ToString(), "Empty Inventory Slot");  
+                    GUI.Label(new Rect(5 + (x * buttonWidth), 20 + (y * buttonHeight), buttonWidth, buttonHeight), (x + y * _inventoryCols).ToString(), emptyInventorySlotStyle);  
                 }
                 cnt++;
             }
@@ -215,7 +221,7 @@ public class myGUI : MonoBehaviour {
       //  GUI.skin = mySkin;
         if (PlayerCharacter.EquipedWeapon == null)
         {
-            GUI.Label(new Rect(5, 100, 40, 40), "","Empty Inventory Slot");
+            GUI.Label(new Rect(5, 100, 40, 40), "",emptyInventorySlotStyle);
 
         }
         else

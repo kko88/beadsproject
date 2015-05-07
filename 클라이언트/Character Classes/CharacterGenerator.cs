@@ -63,7 +63,7 @@ public class CharacterGenerator : MonoBehaviour
         DisplayName();
         DisplayPointsLeft();
         DisplayAttributes();
-
+            
    //     GUI.skin = null;
 
         DisplayVitals();
@@ -190,10 +190,21 @@ public class CharacterGenerator : MonoBehaviour
         if(GUI.Button(new Rect(
                 Screen.width / 2 - 50, statStartingPos + (10 * LINE_HEIGHT), 100, LINE_HEIGHT  ), "Create"))
         {
-            GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
+ //           GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
             UpdateCurVitalValues();
-            gsScript.SaveCharacterData();
-            Application.LoadLevel(GameSettings.levelNames[2]);
+ //           gsScript.SaveCharacterData();
+ //           Application.LoadLevel(GameSettings.levelNames[2]);
+
+            GameSettingtwo.pc = _toon;
+            GameSettingtwo.SaveName(_toon.Name);    
+            GameSettingtwo.SaveAttributes(_toon.primaryAttribute);
+            GameSettingtwo.SaveVitals(_toon.vital);
+ //           PlayerPrefs.DeleteAll();
+            GameSettingtwo.SaveSkills(_toon.skill);
+
+ //           Skill[] temp = GameSettingtwo.Loadskills();
+                
+            Application.LoadLevel(GameSettingtwo.levelNames[2]);  // 튜토리얼 로드
         }
     }
 

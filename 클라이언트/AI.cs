@@ -19,8 +19,8 @@ public class AI : MonoBehaviour {
 
     public float perceptionRadius = 10;  //인식 반경
     public float baseMeleeRange = 4;
-    public Transform target;
-     
+    
+    private Transform _target; 
     private Transform _myTransform;
     private const float ROTATION_DAMP = .03f;
     private const float FORWARD_DAMP = 0.9f;
@@ -63,7 +63,7 @@ public class AI : MonoBehaviour {
  //       if (go == null)
  //           Debug.Log("몹이 플레이어 검색못함");
 
- //       target = go.transform;
+ //        = go.transform;
     }
 
     private IEnumerator FSM()
@@ -138,7 +138,7 @@ public class AI : MonoBehaviour {
     private void Retreat()
     {
      //   Debug.Log("Retreat");
-        _myTransform.LookAt(target);
+        _myTransform.LookAt(_target);
         Move();
         _state = AI.State.Search;
     }
@@ -154,13 +154,13 @@ public class AI : MonoBehaviour {
     /*
     void Update()
     {
-        if (target)
+        if (_target)
         {
-            Vector3 dir = (target.position - _myTransform.position).normalized;
+            Vector3 dir = (_target.position - _myTransform.position).normalized;
             float direction = Vector3.Dot(dir, transform.forward);
 
 
-            float dist = Vector3.Distance(target.position, _myTransform.position);
+            float dist = Vector3.Distance(_target.position, _myTransform.position);
 
            // Debug.Log(dist);
 
@@ -176,7 +176,7 @@ public class AI : MonoBehaviour {
             
 
 
-            dir = (target.position - _myTransform.position).normalized;
+            dir = (_target.position - _myTransform.position).normalized;
             direction = Vector3.Dot(dir, transform.right);
 
             if (direction > ROTATION_DAMP)
@@ -203,13 +203,13 @@ public class AI : MonoBehaviour {
      */
     private void Move()
     {
-        if (target)
+        if (_target)
         {
-            Vector3 dir = (target.position - _myTransform.position).normalized;
+            Vector3 dir = (_target.position - _myTransform.position).normalized;
             float direction = Vector3.Dot(dir, transform.forward);
 
 
-            float dist = Vector3.Distance(target.position, _myTransform.position);
+            float dist = Vector3.Distance(_target.position, _myTransform.position);
 
 
             if (direction > FORWARD_DAMP && dist > baseMeleeRange)
@@ -223,7 +223,7 @@ public class AI : MonoBehaviour {
 
 
 
-            dir = (target.position - _myTransform.position).normalized;
+            dir = (_target.position - _myTransform.position).normalized;
             direction = Vector3.Dot(dir, transform.right);
 
             if (direction > ROTATION_DAMP)
@@ -251,7 +251,7 @@ public class AI : MonoBehaviour {
     //    Debug.Log("이벤트");
         if (other.CompareTag("Player"))
         {
-            target = other.transform;
+            _target = other.transform;
             _alive = true;
           StartCoroutine("FSM");
         }
@@ -261,10 +261,10 @@ public class AI : MonoBehaviour {
     public void OnTriggerExit(Collider other)
     {
     //    Debug.Log("이벤트아님");
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player")) 
         {
-  //          target = null;
-            target = _home;
+  //          _target = null;
+            _target = _home;
   //          _alive = false;
         }
     }

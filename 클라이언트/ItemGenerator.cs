@@ -4,8 +4,6 @@ public static class ItemGenerator  {
 
     public const int BASE_MELEE_RANGE = 1; 
     public const int BASE_RANGED_RANGE = 5;
-
-    private const string MELEE_WEAPON_PATH = "Item Icons/Weapon/Melee/";     // 근접무기 텍스쳐 경로
     public static Item CreateItem()
     {
         // 만들 아이템 타입 결정
@@ -31,15 +29,14 @@ public static class ItemGenerator  {
     {
         Weapon meleeWeapon = new Weapon();
 
-        string[] weaponNames = new string[8];
+        string[] weaponNames = new string[6];
         weaponNames[0] = "단검";
-        weaponNames[1] = "마법책";
-        weaponNames[2] = "화살";
-        weaponNames[3] = "물";
-        weaponNames[4] = "불";
-        weaponNames[5] = "대지";
-        weaponNames[6] = "번개";
-        weaponNames[7] = "활";
+        weaponNames[1] = "고급장검";
+        weaponNames[2] = "고급단검";
+        weaponNames[3] = "장검";
+        weaponNames[4] = "메이스";
+        weaponNames[5] = "도끼";
+
 
 
         meleeWeapon.Name = weaponNames[Random.Range(0, weaponNames.Length)];
@@ -49,7 +46,7 @@ public static class ItemGenerator  {
         meleeWeapon.TypeOfDamage = DamageType.베기;
         meleeWeapon.MaxRange = BASE_MELEE_RANGE;
 
-        meleeWeapon.Icon = Resources.Load(MELEE_WEAPON_PATH + meleeWeapon.Name) as Texture2D;
+        meleeWeapon.Icon = Resources.Load(GameSettingtwo.MELEE_WEAPON_PATH + meleeWeapon.Name) as Texture2D;
 
         return meleeWeapon;
     }

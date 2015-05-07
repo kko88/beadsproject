@@ -3,12 +3,12 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour {
 
-    public const float VERSION = 0.1f;
+    public const float VERSION = 0.2f;
     public bool clearPrefs = false;
     
     private string _levelToLoad = ""; 
-    private string _characterGeneration = GameSettings.levelNames[1];
-    private string _firstLevel = GameSettings.levelNames[2];
+    private string _characterGeneration = GameSettingtwo.levelNames[1];
+    private string _firstLevel = GameSettingtwo.levelNames[2];  // 튜토리얼 번호 2, level1 번호 3
 
     private bool _hasCharacter = false;
     private float _percentLoaded = 0;
@@ -41,6 +41,7 @@ public class MainMenu : MonoBehaviour {
                     {
                         Debug.Log("플레이어 이름키값 있음");
                         _hasCharacter = true;
+                        _displayOptions = true;
                         _levelToLoad = _firstLevel;
                     }
                 }
@@ -76,7 +77,7 @@ public class MainMenu : MonoBehaviour {
             }
         }
         else
-        {
+        {   
             _percentLoaded = Application.GetStreamProgressForLevel(_levelToLoad);
         }
 	}

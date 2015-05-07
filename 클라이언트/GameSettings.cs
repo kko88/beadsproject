@@ -4,10 +4,14 @@ using System;
 public class GameSettings : MonoBehaviour {
 
     public const string PLAYER_SPAWN_POINT = "Player Spawn Point"; // 캐릭터 생성 지점
+
     // 0 - 메인메뉴
     // 1 - 캐릭터 생성창
     // 2 - 튜토리얼
-    public static string[] levelNames = new string[3] { "Main Menu", "Character Generator", "Tutorial" };
+    // 3 - 본게임
+
+  
+    public static string[] levelNames = new string[4] {"Main Menu", "Character Generator", "Tutorial", "Level1"};
     void Awake()
     { 
         DontDestroyOnLoad(this);

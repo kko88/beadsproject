@@ -5,19 +5,19 @@ using System.Collections;
 public class GameMaster : MonoBehaviour {
 
     public GameObject playerCharacter;
-    public Camera mainCamera;
     public GameObject gameSettings;
 
-    public float zOffset;
-    public float yOffset;
-    public float xRotOffset;
+    
+//    public Camera mainCamera;
+//    public float zOffset;
+//    public float yOffset;
+//    public float xRotOffset;
     
     private GameObject _pc;
     private PlayerCharacter _pcScript;
 
     public Vector3 _playerSpawnPointPos;      
 
-	// Use this for initialization
 	void Start () {
 
   //      _playerSpawnPointPos = new Vector3(900, 30, 300); // 캐릭터 생성지점 디폴트값
@@ -40,11 +40,11 @@ public class GameMaster : MonoBehaviour {
       
       _pcScript = _pc.GetComponent<PlayerCharacter>(); 
 
-      zOffset = -5.0f;
-      yOffset = 5.0f;
-      xRotOffset = 23f;
-      mainCamera.transform.position = new Vector3(_pc.transform.position.x, _pc.transform.position.y + yOffset, _pc.transform.position.z + zOffset);
-      mainCamera.transform.Rotate(xRotOffset, 0, 0);
+  //    zOffset = -5.0f;
+  //    yOffset = 5.0f;
+  //    xRotOffset = 23f;
+  //    mainCamera.transform.position = new Vector3(_pc.transform.position.x, _pc.transform.position.y + yOffset, _pc.transform.position.z + zOffset);
+  //    mainCamera.transform.Rotate(xRotOffset, 0, 0);
 
       LoadCharacter();
     }
