@@ -27,7 +27,7 @@ public class GameSettings : MonoBehaviour {
 
      //   PlayerPrefs.DeleteAll();
 
-        PlayerPrefs.SetString("Player Name", pcClass.Name);
+        PlayerPrefs.SetString("Player Name", pcClass.name);
 
         for (int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++)
         {
@@ -62,7 +62,7 @@ public class GameSettings : MonoBehaviour {
 
         PlayerCharacter pcClass = pc.GetComponent<PlayerCharacter>();
 
-        pcClass.Name = PlayerPrefs.GetString("Player Name", "Name Me");
+        pcClass.name = PlayerPrefs.GetString("Player Name");
 
         for (int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++)
         {

@@ -26,7 +26,7 @@ public class Chest : MonoBehaviour
 
     private State state;
 
-    public float maxDistance = 2;
+    public float maxDistance = 4;
 
     private GameObject _player;
     private Transform _myTransform;
@@ -118,7 +118,7 @@ public class Chest : MonoBehaviour
            audio.PlayOneShot(openSound);
 
            if(!_used)   // 사용되었던 상자가아니면 5개의 랜덤 아이템 생성 (디폴트값 false)
-           PopulateChest(1);    
+           PopulateChest(5);    
 
            yield return new WaitForSeconds(animation[openAnimName].length);
            state = Chest.State.open;

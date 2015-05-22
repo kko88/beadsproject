@@ -36,7 +36,12 @@ public class MobMove : MonoBehaviour
     public string jumpAnimName;
     public string strafeAnimName;
     public string fallAnimName;
+    public string dieAnimName;
 
+    public AnimationClip meleeAttack;
+    public AnimationClip idleIncombat;
+    public AudioClip attackSound;
+    public AudioClip dieSound;
 
     public float walkSpeed = 10;
     public float runMultiplier = 2;   // 달리기 배수
@@ -61,11 +66,28 @@ public class MobMove : MonoBehaviour
 
     private State _state;
 
+    private BaseCharacter _bc;
+
+    public int maxHealth;
+    public int Health;
+    public int Damage;
+    public LevelSystem playerLevel;
+    public int mobExp;
+    private int stunTime;
+
+
     public void Awake()
     {
         _myTransform = transform;
+        
         _controller = GetComponent<CharacterController>();
+        
         _state = MobMove.State.Init;
+
+        _bc = gameObject.GetComponent<BaseCharacter>();
+
+        Health = maxHealth;
+
     }
 
     IEnumerator Start()
@@ -205,7 +227,9 @@ public class MobMove : MonoBehaviour
     {
         if (idleAnimName == "")
             return;
+        if(!_bc.InCombat)
         animation.CrossFade(idleAnimName);
+
     }
 
     public void Walk()
@@ -239,6 +263,76 @@ public class MobMove : MonoBehaviour
         if (fallAnimName == "")
             return;
             animation.CrossFade(fallAnimName);
+    }
+
+    public void Die()
+    {
+        if (dieAnimName == "")
+            return;
+        animation.CrossFade(dieAnimName);
+    }
+    
+    public void PlayMeleeAttack()
+    {
+        if (!IsDead())
+        {
+            if (stunTime <= 0)
+            {
+                animation[meleeAttack.name].wrapMode = WrapMode.Once;
+                animation.Play(meleeAttack.name);
+                audio.PlayOneShot(attackSound);
+            }
+        }
+        else
+        {
+            DieMethod();
+        }
+    }
+    public void getStun(int seconds)
+    {
+        CancelInvoke("stunCountDown");
+        stunTime = seconds;
+        InvokeRepeating("stunCountDown", 0f, 1f);
+    }
+
+    void stunCountDown()
+    {
+        stunTime = stunTime - 1;
+        if (stunTime == 0)
+        {
+            CancelInvoke("stunCountDown");
+        }
+    }
+    public void getHit(double Damage)
+    {
+        Health = Health - (int)Damage;
+
+        if (Health < 0)
+        {
+            Health = 0;
+        }
+    }
+    void DieMethod()
+    {
+        animation.Play(dieAnimName);
+        audio.PlayOneShot(dieSound);
+
+        if (animation[dieAnimName].time > animation[dieAnimName].length * 0.9)
+        {
+            playerLevel.exp = playerLevel.exp + mobExp;
+            Destroy(gameObject);
+        }
+    }
+    bool IsDead()
+    {
+        if (Health <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     
 }

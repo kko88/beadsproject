@@ -4,14 +4,24 @@ using System;
 
 public static class GameSettingtwo {
 
+    public const string VERSION_KEY_NAME = "ver";
+    public const float VERSION_NUMBER = 0.201f;
+
+    public const float BASE_MELEE_ATTACK_TIMER = 2.0f;
+    public const float BASE_MELEE_ATTACK_SPEED = 2.0f;
+    public const float BASE_MELEE_RANGE = 4.0f;
+    public const float BASE_RANGED_RANGE = 10.0f;
+    public const float BASE_MAGIC_RANGE = 8.0f;
+    //  private const string PLAYER_POSITION = "위치";
     private const string NAME = "캐릭터 이름";
     private const string BASE_VALUE = " - 초기 스탯";
     private const string EXP_TO_LEVEL = " - 필요 경험치";
     private const string CUR_VALUE = " - 현재 스탯";
 
-
+  //  public static Vector3 startingPos = new Vector3(-30, -8, 114);
     public const string MELEE_WEAPON_PATH = "Item Icons/Weapon/Melee/";     // 무기 텍스쳐 경로
     public const string MELEE_WEAPON_MESH_PATH = "Item Icons/Weapon/Mesh/";     // 무기 메쉬 경로
+    public const string BEADS_PATH = "Item Icons/Beads/";     // 무기 텍스쳐 경로 
      
     public static PlayerCharacter pc;
 
@@ -19,7 +29,7 @@ public static class GameSettingtwo {
     // 1 - 캐릭터 생성창
     // 2 - 튜토리얼
     // 3 - 본게임
-    public static string[] levelNames = new string[4] { "Main Menu", "Character Generator", "Tutorial", "Level1" };
+    public static string[] levelNames = new string[3] { "Main Menu", "Character Generator", "Level1" };
   
     static GameSettingtwo()
     {
@@ -32,9 +42,25 @@ public static class GameSettingtwo {
 
     public static string LoadName()
     {
-        return PlayerPrefs.GetString(NAME, "Anon");
+        return PlayerPrefs.GetString(NAME);
     }
 
+   /*
+    public static void SavePlayerPosition(Vector3 pos)
+    {
+        PlayerPrefs.SetInt(PLAYER_POSITION + "x", pos.x);
+        PlayerPrefs.SetInt(PLAYER_POSITION + "y", pos.y);
+        PlayerPrefs.SetInt(PLAYER_POSITION + "z", pos.z);
+    }
+    public static Vector3 LoadPlayerPosition()
+    {
+        Vector3 temp = new Vector3( 
+        PlayerPrefs.SetInt(PLAYER_POSITION + "x", startingPos.x),
+        PlayerPrefs.SetInt(PLAYER_POSITION + "y", startingPos.y),
+        PlayerPrefs.SetInt(PLAYER_POSITION + "z", startingPos.z));
+        return temp; 
+    }
+    */
     public static void SaveAttribute(AttributeName name, Attribute attribute)
     {
         PlayerPrefs.SetInt(((AttributeName)name).ToString() + BASE_VALUE, attribute.BaseValue);
@@ -55,14 +81,13 @@ public static class GameSettingtwo {
         
     }
 
-    public static Attribute[] LoadAttributes()
+    public static void LoadAttributes()
     {
         Attribute[] att = new Attribute[Enum.GetValues(typeof(AttributeName)).Length];
         for (int cnt = 0; cnt < Enum.GetValues(typeof(AttributeName)).Length; cnt++)
         
            att[cnt] = LoadAttribute((AttributeName)cnt);
         
-        return att;
     }
 
 
@@ -142,5 +167,13 @@ public static class GameSettingtwo {
         return skill;   
     }
 
+    public static void SaveGameVersion()
+    {
+        PlayerPrefs.SetFloat(VERSION_KEY_NAME, VERSION_NUMBER); 
+    }
 
+    public static float LoadGameVersion()
+    {
+      return PlayerPrefs.GetFloat(VERSION_KEY_NAME, 0);
+    }
 }

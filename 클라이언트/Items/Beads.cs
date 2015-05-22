@@ -1,31 +1,50 @@
 ﻿using UnityEngine;
-
-public class Beads : BuffItem {
-
-    private BeadsSlot _slot; // 구슬이 들어가는 슬롯
-
+public class Beads {
+    private string _name; 
+    private BeadsRarityTypes _rarity;
+    private int _maxDur;
+    private Texture2D _icon;
     public Beads()
     {
-        _slot = BeadsSlot.beads_no0;
+        _name = "Need Name";
+        _rarity = BeadsRarityTypes.고대;
     }
 
-    public Beads(BeadsSlot slot)
+    public Beads(string name, BeadsRarityTypes rare)
+    { 
+        _name = name;
+        _rarity = rare;
+    }
+    public string Name
     {
-        _slot = slot;
+        get { return _name; }
+        set { _name = value; }
     }
 
-    public BeadsSlot Slot
+    
+
+    public BeadsRarityTypes Rarity
     {
-        get { return _slot; }
-        set { _slot = value; }
+        get { return _rarity; }
+        set { _rarity = value; }
+    }
+
+    
+    public Texture2D Icon
+    {
+        get { return _icon; }
+        set { _icon = value; }
+
+    }
+
+    public virtual string ToolTip()
+    {
+        return Name + "\n"; 
     }
 }
 
-public enum BeadsSlot
-{
-     beads_no1,
-     beads_no2,
-     beads_no3,
-     beads_no4,
-     beads_no0
+//아이템 등급 종류
+public enum BeadsRarityTypes {  
+    고대
 }
+

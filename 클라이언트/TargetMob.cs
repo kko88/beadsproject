@@ -11,12 +11,10 @@ public class TargetMob : MonoBehaviour
 
     void Start()
     {
-
         targets = new List<Transform>(); // 타겟에 저장
         selectedTarget = null;
         myTransform = transform;
         AddAllEnemies();
-
     }
 
     public void AddAllEnemies()
@@ -26,7 +24,7 @@ public class TargetMob : MonoBehaviour
         foreach (GameObject enemy in go)
             AddTarget(enemy.transform);
     }
-
+        
     public void AddTarget(Transform enemy)
     {
         targets.Add(enemy);
@@ -40,10 +38,9 @@ public class TargetMob : MonoBehaviour
            return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
         });
     }
-    private void TargetEnemy()
+    public void TargetEnemy()
     {
         if (targets.Count == 0)
-        
             AddAllEnemies();
 
         
@@ -67,7 +64,7 @@ public class TargetMob : MonoBehaviour
                     {
                         index = 0;
                     }
-                    DeselectTarget();    // 선택안된 타겟 같이 보여짐(초록색)
+                    DeselectTarget();    // 선택안된 타겟 같이 보여짐
                     selectedTarget = targets[index];
                 }
                 SelectTarget();    
@@ -76,21 +73,22 @@ public class TargetMob : MonoBehaviour
         
     }
 
-    private void SelectTarget() // 선택하면 색변화(tab키)
+    
+    public void SelectTarget() // 선택
     {
         Transform name = selectedTarget.FindChild("Name");
-
         if (name == null)
         {
             Debug.Log("선택된 몹이 없습니다." + selectedTarget.name);
             return;
         }
-     
-   name.GetComponent<TextMesh>().text = selectedTarget.GetComponent<Mob>().Name;
+
+        name.GetComponent<TextMesh>().text =  selectedTarget.GetComponent<Mob>().name;
         name.GetComponent<MeshRenderer>().enabled = true;
         selectedTarget.GetComponent<Mob>().DisplayHealth();
+        Debug.Log(selectedTarget.name);
 
-    //    Messenger<bool>.Broadcast("몹 체력 보기", true);
+      //  Messenger<bool>.Broadcast("몹 체력 보기", true);
     }
 
     private void DeselectTarget() // 선택안된 나머지 
@@ -99,7 +97,7 @@ public class TargetMob : MonoBehaviour
         selectedTarget = null;
 
 
-   //     Messenger<bool>.Broadcast("몹 체력 보기", false);
+    //   Messenger<bool>.Broadcast("몹 체력 보기", false);
     }
 
     void Update()

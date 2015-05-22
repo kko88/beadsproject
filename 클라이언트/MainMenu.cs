@@ -3,12 +3,12 @@ using System.Collections;
 
 public class MainMenu : MonoBehaviour {
 
-    public const float VERSION = 0.2f;
+   // public const float VERSION = 0.2f;
     public bool clearPrefs = false;
     
     private string _levelToLoad = ""; 
     private string _characterGeneration = GameSettingtwo.levelNames[1];
-    private string _firstLevel = GameSettingtwo.levelNames[2];  // 튜토리얼 번호 2, level1 번호 3
+    private string _firstLevel = GameSettingtwo.levelNames[2];  // level1 번호 2
 
     private bool _hasCharacter = false;
     private float _percentLoaded = 0;
@@ -18,13 +18,13 @@ public class MainMenu : MonoBehaviour {
         if (clearPrefs)
             PlayerPrefs.DeleteAll();
 
-        if (PlayerPrefs.HasKey("ver"))
+        if (PlayerPrefs.HasKey(GameSettingtwo.VERSION_KEY_NAME))
         {
             Debug.Log("버전 키");
-            if (PlayerPrefs.GetFloat("ver") != VERSION)
+            if (GameSettingtwo.LoadGameVersion() != GameSettingtwo.VERSION_NUMBER)
             {
                 Debug.Log("최신버전 아님");
-
+                _levelToLoad = _characterGeneration;
             }
             else {
                 Debug.Log("최근 저장된 버전");
@@ -49,7 +49,7 @@ public class MainMenu : MonoBehaviour {
                 { 
                     Debug.Log("플레이어 이름키 없음 ");
                     PlayerPrefs.DeleteAll();
-                    PlayerPrefs.SetFloat("ver", VERSION);
+                    GameSettingtwo.SaveGameVersion();
                     _levelToLoad = _characterGeneration;
                 }
             }
@@ -58,7 +58,7 @@ public class MainMenu : MonoBehaviour {
         {
             Debug.Log("ver키 없음");
             PlayerPrefs.DeleteAll();
-            PlayerPrefs.SetFloat("ver", VERSION);
+            GameSettingtwo.SaveGameVersion();
             _levelToLoad = _characterGeneration;
         }
 	}
@@ -96,7 +96,8 @@ public class MainMenu : MonoBehaviour {
                 if (GUI.Button(new Rect(10, 40, 110, 25), "삭제"))
                 {
                     PlayerPrefs.DeleteAll();
-                    PlayerPrefs.SetFloat("ver", VERSION);
+                    GameSettingtwo.SaveGameVersion();
+                    PlayerPrefs.SetFloat("ver", GameSettingtwo.VERSION_NUMBER);
                     _levelToLoad = _characterGeneration;
                     _displayOptions = false;
                 }

@@ -1,24 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
+[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(MobMove))]
 [RequireComponent(typeof(SphereCollider))]
 public class AI : MonoBehaviour {
+
 
     private enum State {
         Idle,
         Init,
         Setup,
         Search,
-        Attack,
-        Retreat, //복귀
-        Flee  // 가까운 스폰포인트로 도망
+        Decide, // 몹이 타겟팅된 플레이어에게 할 행동결정 
     }
 
 
     public float perceptionRadius = 10;  //인식 반경
-    public float baseMeleeRange = 4;
     
     private Transform _target; 
     private Transform _myTransform;
@@ -27,50 +25,27 @@ public class AI : MonoBehaviour {
 
     private Transform _home;
     private State _state;
-    private bool _alive = true;
     private SphereCollider _sphereCollider;
+
+    private Mob _me;
+
+    void Awake()
+    {
+        _me = gameObject.GetComponent<Mob>();
+    }
+
     void Start()
     {
+        
         _state = AI.State.Init;
         StartCoroutine("FSM");
- 
-     /* SphereCollider sc = GetComponent<SphereCollider>();
-        CharacterController cc = GetComponent<CharacterController>();
-
-        if (sc == null){
-            Debug.LogError("이 몹에 SphereCollider 없음");
-        }
-        else
-        {
-            sc.isTrigger = true;
-        }
-
-        if (cc == null)
-        {
-            Debug.LogError("이 몹에 컨트롤러 없음");
-        }
-
-        else
-        {
-            sc.center = cc.center;
-            sc.radius = preceptionRadius;
-        }
-*/
- //       _myTransform = transform;
-
- //       GameObject go = GameObject.FindGameObjectWithTag("Player");
-
- //       if (go == null)
- //           Debug.Log("몹이 플레이어 검색못함");
-
- //        = go.transform;
     }
+
 
     private IEnumerator FSM()
     {
-        while (_alive)
+        while (_state != AI.State.Idle)
         {
-         //   Debug.Log("Alive:" + _alive);
             switch (_state)
             {
                 case State.Init:
@@ -82,14 +57,8 @@ public class AI : MonoBehaviour {
                 case State.Search:
                     Search();
                     break;
-                case State.Attack:
-                    Attack();
-                    break;
-                case State.Retreat:
-                    Retreat();
-                    break;
-                case State.Flee:
-                    Flee();
+                case State.Decide:
+                    Decide();
                     break;
             }
             yield return null;
@@ -118,101 +87,108 @@ public class AI : MonoBehaviour {
         _sphereCollider.radius = perceptionRadius;
         _sphereCollider.isTrigger = true;
 
-        _state = AI.State.Search;
-        _alive = false;
+        _state = AI.State.Idle;
     }
 
     private void Search()
     {
-     //   Debug.Log("Search");
-        Move();
-        _state = AI.State.Attack;
-    }
-
-    private void Attack()
-    {
-     //   Debug.Log("Attack");
-        Move();
-        _state = AI.State.Retreat;
-    }
-    private void Retreat()
-    {
-     //   Debug.Log("Retreat");
-        _myTransform.LookAt(_target);
-        Move();
-        _state = AI.State.Search;
-    }
-
-
-    private void Flee()
-    {
-    //    Debug.Log("Flee");
-        Move();
-        _state = AI.State.Search;
-    }
-  
-    /*
-    void Update()
-    {
-        if (_target)
+        if (_target == null)
         {
-            Vector3 dir = (_target.position - _myTransform.position).normalized;
-            float direction = Vector3.Dot(dir, transform.forward);
-
-
-            float dist = Vector3.Distance(_target.position, _myTransform.position);
-
-           // Debug.Log(dist);
-
-            
-            if (direction > FORWARD_DAMP && dist > baseMeleeRange)
+            _state = AI.State.Idle;
+            if (_me.InCombat)
             {
-                SendMessage("MoveMeForward", MobMove.Forward.forward);
+                _me.InCombat = false;
             }
-            else
-            {
-                SendMessage("MoveMeForward", MobMove.Forward.none);
-            }
-            
-
-
-            dir = (_target.position - _myTransform.position).normalized;
-            direction = Vector3.Dot(dir, transform.right);
-
-            if (direction > ROTATION_DAMP)
-            {
-                SendMessage("RotateMe", MobMove.Turn.right);
-            }
-            else if (direction < ROTATION_DAMP)
-            {
-                SendMessage("RotateMe", MobMove.Turn.left);
-            }
-            else
-            {
-                SendMessage("RotateMe", MobMove.Turn.none);
-            }
-
         }
         else
         {
-            SendMessage("MoveMeForward", MobMove.Forward.none);
-            SendMessage("RotateMe", MobMove.Turn.none);
+            _state = AI.State.Decide;
+            if(!_me._inCombat)
+            _me.InCombat = true;
         }
+    
+    }
+    private void Decide()
+    {
+        Move();
+
+        int opt = 0;
+        if (_target != null && _target.CompareTag("Player"))
+        {
+            if (Vector3.Distance(_myTransform.position, _target.position) < GameSettingtwo.BASE_MELEE_RANGE && _me.meleeResetTimer <= 0)
+                opt = Random.Range(0, 3);
+
+            else
+            {
+                if (_me.meleeResetTimer > 0)
+                    _me.meleeResetTimer -= Time.deltaTime;
+
+                opt = Random.Range(1, 3);
+            }
+
+            switch (opt)
+            {
+                case 0:
+                    MeleeAttack();
+                    break;
+                case 1:
+                    MagicAttack();
+                    break;
+                case 2:
+                    RangedAttack();
+                    break;
+                default:
+                    break;
+            }
+        }
+        _state = AI.State.Search;
     }
 
-     */
+
+    private void MeleeAttack()
+    {
+        _me.meleeResetTimer = _me.meleeAttackTimer;
+        SendMessage("PlayMeleeAttack");
+
+    }
+    private void MagicAttack()
+    {
+
+    }
+    private void RangedAttack()
+    {
+
+    }
+ 
+
     private void Move()
     {
         if (_target)
         {
-            Vector3 dir = (_target.position - _myTransform.position).normalized;
-            float direction = Vector3.Dot(dir, transform.forward);
-
 
             float dist = Vector3.Distance(_target.position, _myTransform.position);
 
+            if (_target.name == "Spawn Point")
+            {
+                if (dist < GameSettingtwo.BASE_MELEE_RANGE)
+                {
+                    _target = null;
+                    _state = AI.State.Idle;
+                    SendMessage("MoveMeForward", MobMove.Forward.none);
+                    SendMessage("RotateMe", MobMove.Turn.none);
+                    return;
+                }
+            }
 
-            if (direction > FORWARD_DAMP && dist > baseMeleeRange)
+
+            Quaternion rot = Quaternion.LookRotation(_target.transform.position - _myTransform.position);
+            _myTransform.rotation = Quaternion.Slerp(_myTransform.rotation, rot, Time.deltaTime * 6.0f);
+
+
+            Vector3 dir = (_target.position - _myTransform.position).normalized;
+            float direction = Vector3.Dot(dir, transform.forward);
+
+            if (direction > FORWARD_DAMP && dist > GameSettingtwo.BASE_MELEE_RANGE)
             {
                 SendMessage("MoveMeForward", MobMove.Forward.forward);
             }
@@ -223,21 +199,21 @@ public class AI : MonoBehaviour {
 
 
 
-            dir = (_target.position - _myTransform.position).normalized;
-            direction = Vector3.Dot(dir, transform.right);
+ //           dir = (_target.position - _myTransform.position).normalized;
+ //           direction = Vector3.Dot(dir, transform.right);
 
-            if (direction > ROTATION_DAMP)
-            {
-                SendMessage("RotateMe", MobMove.Turn.right);
-            }
-            else if (direction < ROTATION_DAMP)
-            {
-                SendMessage("RotateMe", MobMove.Turn.left);
-            }
-            else
-            {
-                SendMessage("RotateMe", MobMove.Turn.none);
-            }
+ //           if (direction > ROTATION_DAMP)
+ //           {
+ //               SendMessage("RotateMe", MobMove.Turn.right);
+ //           }
+ //           else if (direction < ROTATION_DAMP)
+ //           {
+ //               SendMessage("RotateMe", MobMove.Turn.left);
+ //           }
+ //           else
+ //           {
+ //               SendMessage("RotateMe", MobMove.Turn.none);
+ //           }
 
         }
         else
@@ -248,11 +224,11 @@ public class AI : MonoBehaviour {
     }
     public void OnTriggerEnter(Collider other)
     {
-    //    Debug.Log("이벤트");
         if (other.CompareTag("Player"))
         {
             _target = other.transform;
-            _alive = true;
+            
+            _state = AI.State.Search;
           StartCoroutine("FSM");
         }
 
@@ -260,13 +236,13 @@ public class AI : MonoBehaviour {
 
     public void OnTriggerExit(Collider other)
     {
-    //    Debug.Log("이벤트아님");
         if (other.CompareTag("Player")) 
         {
-  //          _target = null;
             _target = _home;
-  //          _alive = false;
+
+            if (_me.InCombat)
+                _me.InCombat = false;
         }
     }
-  
+
 }

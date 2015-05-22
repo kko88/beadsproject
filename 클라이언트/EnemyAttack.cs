@@ -1,58 +1,128 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
+
+[RequireComponent(typeof(AudioSource))]
 public class EnemyAttack : MonoBehaviour
 {
+
+    
+    public float Speed;
+    public float Range;
+    public CharacterController Controller;
+    public Transform Player;
+    public LevelSystem playerLevel;
+    private Fighter Opponent;
+    public int mobExp;
+
+    public AnimationClip AttackClip;
+    public AnimationClip Run;
+    public AnimationClip Idle;
+    public AnimationClip Die;
+    public AudioClip attackSound;
+    public AudioClip dieSound;
+
+    public double ImpactTime;
+    private bool Impacted;
+
+    public int maxHealth;
+    public int Health;
+    public int Damage;
+
+    private int stunTime;
 
     public GameObject target; // 타겟
     public float attackTimer; // 공격시간
     public float coolDown;  // 쿨다운
 
-    // Use this for initialization
-    void Start()
+   
+	void Start () {
+
+        Health = maxHealth;
+        Opponent = Player.GetComponent<Fighter>();
+    }
+	
+	// Update is called once per frame
+	void Update () {
+
+
+        if (!IsDead())
+        {
+            if (stunTime <= 0)
+            {
+                    animation.Play(AttackClip.name);
+                    
+
+                    if (animation[AttackClip.name].time > 0.9 * animation[AttackClip.name].length)
+                    {
+                        Impacted = false;
+                    }
+                
+            }
+            else
+            {
+
+            }
+        }
+        else
+        {
+            DieMethod();
+        }
+	}
+
+
+    public void getStun(int seconds)
     {
-
-        attackTimer = 0;
-        coolDown = 2.0f;
-
+        CancelInvoke("stunCountDown");
+        stunTime = seconds;
+        InvokeRepeating("stunCountDown",0f , 1f);
     }
 
-    // Update is called once per frame
-    void Update()
+    void stunCountDown()
     {
-
-        if (attackTimer > 0)
-            attackTimer -= Time.deltaTime;
-
-        if (attackTimer < 0)
-            attackTimer = 0;
-
-            if (attackTimer == 0)
-            {
-                Attack();
-                attackTimer = coolDown;
-            }
-
-     }
-   
-
-    private void Attack()
-    {
-        float distance = Vector3.Distance(target.transform.position, transform.position);
-        Vector3 dir = (target.transform.position - transform.position).normalized;
-        float direction = Vector3.Dot(dir, transform.forward);
-//        Debug.Log(direction); //로그 출력
-
-        if (distance < 2.0f)
+        stunTime = stunTime - 1;
+        if (stunTime == 0)
         {
-            if (direction > 0)
-            {
+            CancelInvoke("stunCountDown");
+        }
+    }
 
-                PlayerHealth eh = (PlayerHealth)target.GetComponent("PlayerHealth");
-                eh.AdjustCurrentHealth(-4);  //4 데미지
-            }
+    
+    public void getHit(double Damage)
+    {
+        Health = Health - (int)Damage;
 
+        if (Health < 0)
+        {
+            Health = 0;
+        }
+    }
+
+    void DieMethod()
+    {
+        animation.Play(Die.name);
+        audio.PlayOneShot(dieSound);
+    
+        if (animation[Die.name].time > animation[Die.name].length * 0.9)
+        {
+            playerLevel.exp = playerLevel.exp + mobExp;
+            Destroy(gameObject);
+        }
+    }
+
+    bool IsDead()
+    {
+        if (Health <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
+
+
 

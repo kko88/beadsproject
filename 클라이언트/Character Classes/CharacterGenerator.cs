@@ -5,9 +5,9 @@ public class CharacterGenerator : MonoBehaviour
 {
 
     private PlayerCharacter _toon;
-    private const int STARTING_POINTS = 350;  // 초기 분배가능 능력치
+    private const int STARTING_POINTS = 90;  // 초기 분배가능 능력치
     private const int MIN_STARTING_ATTRIBUTE_VALUE = 10;    // 스탯 최소값
-    private const int STARTING_VALUE = 50;   //스탯 초기값
+    private const int STARTING_VALUE = 20;   //스탯 초기값
     private int pointsLeft; // 잔여 능력치
 
     private const int OFFSET = 5; 
@@ -78,7 +78,7 @@ public class CharacterGenerator : MonoBehaviour
     private void DisplayName()
     {
         GUI.Label(new Rect(10, 10, 50, 25), "Name:");
-        _toon.Name = GUI.TextField(new Rect(65, 10, 100, 25), _toon.Name); 
+        _toon.name = GUI.TextField(new Rect(65, 10, 100, 25), _toon.name); 
 
     }
 
@@ -194,9 +194,9 @@ public class CharacterGenerator : MonoBehaviour
             UpdateCurVitalValues();
  //           gsScript.SaveCharacterData();
  //           Application.LoadLevel(GameSettings.levelNames[2]);
-
+            
             GameSettingtwo.pc = _toon;
-            GameSettingtwo.SaveName(_toon.Name);    
+            GameSettingtwo.SaveName(_toon.name);    
             GameSettingtwo.SaveAttributes(_toon.primaryAttribute);
             GameSettingtwo.SaveVitals(_toon.vital);
  //           PlayerPrefs.DeleteAll();

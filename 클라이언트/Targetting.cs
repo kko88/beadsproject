@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Targetting : MonoBehaviour {
+   
     public List<Transform> targets; // transform 리스트
     public Transform selectedTarget;
     private Transform myTransform;
-	// Use this for initialization
+    bool attackAct;
+	
+
 	void Start () {
 
         targets = new List<Transform>(); // 타겟에 저장
@@ -67,7 +70,7 @@ public class Targetting : MonoBehaviour {
     {
         selectedTarget.renderer.material.color = Color.red;
         PlayerAttack pa = (PlayerAttack)GetComponent("PlayerAttack");
-        pa.target = selectedTarget.gameObject; 
+    //    pa.target = selectedTarget.gameObject; 
     }
 
     private void DeselectTarget() // 선택안된 나머지 

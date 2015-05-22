@@ -13,7 +13,6 @@ public class VitalBar : MonoBehaviour{
         _display = gameObject.GetComponent<GUITexture>();
     }   
 
-    // Use this for initialization
     void Start()
     {
         _maxBarLength = (int)_display.pixelInset.width;
@@ -31,8 +30,8 @@ public class VitalBar : MonoBehaviour{
         else
         {
             ToggleDisplay(false);
-            Messenger<int, int>.AddListener("몹 체력 업데이트", OnChangeHealthBarSize);
-            Messenger<bool>.AddListener("몹 체력 보기", ToggleDisplay);
+      //      Messenger<int, int>.AddListener("몹 체력 업데이트", OnChangeHealthBarSize);
+      //      Messenger<bool>.AddListener("몹 체력 보기", ToggleDisplay);
       //      Debug.LogError("Healthbar");
 
         }
@@ -45,7 +44,7 @@ public class VitalBar : MonoBehaviour{
         else
         {
             Messenger<int, int>.RemoveListener("몹 체력 업데이트", OnChangeHealthBarSize);
-            Messenger<bool>.RemoveListener("몹 체력 보기", ToggleDisplay);
+       //     Messenger<bool>.RemoveListener("몹 체력 보기", ToggleDisplay);
         }
     }
 

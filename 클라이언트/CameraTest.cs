@@ -33,10 +33,12 @@ public class CameraTest : MonoBehaviour {
     }
 	void Start () {
         if (target == null)
-            Debug.Log("타겟이 없습니다.");
-       else
         {
-           CameraSetup();
+            //         Debug.Log("타겟이 없습니다.");
+        }
+        else
+        {
+            CameraSetup();
         }
 	}
 

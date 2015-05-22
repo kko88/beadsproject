@@ -7,9 +7,10 @@ using System.Collections;
 /// space - 점프
 /// shift - 달리기 토글키 On/Off
 /// </summary>
-
+/// 
+[RequireComponent(typeof(AudioSource))]
 [RequireComponent(typeof(CharacterController))]
-public class AdvancedMovement : MonoBehaviour {
+public class AdvancedMovement : MonoBehaviour { 
 
 
     public enum State
@@ -39,7 +40,10 @@ public class AdvancedMovement : MonoBehaviour {
     public string jumpAnimName;
     public string strafeAnimName;
     public string fallAnimName;
-
+    public string dieAnimName;
+     
+    public AnimationClip meleeAttack;
+    public AnimationClip idleIncombat;
 
     public float walkSpeed = 5;
     public float runMultiplier = 2;   // 달리기 배수
@@ -63,12 +67,14 @@ public class AdvancedMovement : MonoBehaviour {
     private bool _jump;
 
     private State _state;
+    private BaseCharacter _bc;
 
     public void Awake()
     {
         _myTransform = transform;
         _controller = GetComponent<CharacterController>();
         _state = AdvancedMovement.State.Init;
+        _bc = gameObject.GetComponent<BaseCharacter>();
     }
 	
 	IEnumerator Start () {
@@ -114,6 +120,7 @@ public class AdvancedMovement : MonoBehaviour {
         _strafe = Turn.none;
         _run = true;        // 토글런 설정 On/Off
         _jump = false;
+        
 
         _state = AdvancedMovement.State.Run;
     }
@@ -177,6 +184,7 @@ public class AdvancedMovement : MonoBehaviour {
         _moveDirection.y -= gravity * Time.deltaTime;
         _collisionFlags = _controller.Move(_moveDirection * Time.deltaTime);
     }
+    
 
 
     public void MoveMeForward(Forward z)
@@ -207,7 +215,9 @@ public class AdvancedMovement : MonoBehaviour {
     {
         if (idleAnimName == "")
             return;
-        animation.CrossFade(idleAnimName);
+        if (!_bc.InCombat)
+            animation.CrossFade(idleAnimName);
+     
     }
 
     public void Walk()
@@ -215,6 +225,7 @@ public class AdvancedMovement : MonoBehaviour {
         if (walkAnimName == "")
             return;
         animation.CrossFade(walkAnimName);
+      
     }
     public void Run()
     {
@@ -222,18 +233,21 @@ public class AdvancedMovement : MonoBehaviour {
             return;
         animation[runAnimName].speed = 1.5f;
         animation.CrossFade(runAnimName);
+      
     }               
     public void Jump()
     {
         if (jumpAnimName == "")
             return;
         animation.CrossFade(jumpAnimName);
+      
     }
     public void Strafe()
     {
         if (strafeAnimName == "")
             return;
         animation.CrossFade(strafeAnimName);
+      
     }
 
     public void Fall()
@@ -243,4 +257,24 @@ public class AdvancedMovement : MonoBehaviour {
         animation.CrossFade(fallAnimName);
     }
 
+    public void Die()
+    {
+        if (dieAnimName == "")
+            return;
+        animation.CrossFade(dieAnimName);
+    }
+/*
+    public void PlayMeleeAttack()
+    {
+        animation[meleeAttack.name].wrapMode = WrapMode.Once;
+
+        if (meleeAttack == null)
+        {
+            Debug.Log("애니메이션 없음");
+            return;
+        }
+     //   animation[meleeAttack.name].speed = animation[meleeAttack.name].length / 2.0f;
+        animation.Play(meleeAttack.name);
+
+    }*/
 }

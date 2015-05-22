@@ -1,6 +1,6 @@
 ﻿public class BaseStat {
 
-    public const int STARTING_EXP_COST = 100;
+    public const int STARTING_EXP_COST = 50;
 
     private int _baseValue; // 스탯 초기값
     private int _buffValue; // 버프값

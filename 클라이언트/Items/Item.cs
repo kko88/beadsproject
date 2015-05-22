@@ -65,7 +65,7 @@ public class Item {
     public virtual string ToolTip()
     {
         return Name + "\n" +
-                   "가치" + Value + "\n" +
+                   "가격" + Value + "\n" +
                    "내구도" + CurDurability + "/" + MaxDurability + "\n";
     }
 }

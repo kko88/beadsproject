@@ -3,8 +3,8 @@ using System.Collections;
 
 public class PlayerHealth : MonoBehaviour {
 
-    public int maxHealth = 100;                //최대 체력
-    public int curHealth = 100;                //현재 체력
+    public int maxHealth;                //최대 체력
+    public int curHealth;                //현재 체력
 
     public float healthBarLength;
 
@@ -25,9 +25,6 @@ public class PlayerHealth : MonoBehaviour {
 	}
 
     void OnGUI() {
-
-        //체력바 출력
-        GUI.Box(new Rect(10, 10, healthBarLength, 20), curHealth + "/" + maxHealth);  
         
     }
 

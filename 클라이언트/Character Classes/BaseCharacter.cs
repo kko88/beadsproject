@@ -6,7 +6,9 @@ public class BaseCharacter : MonoBehaviour {
 
     public GameObject weaponMount;
 
-    private string _name;
+
+    public string name;
+  //  private string _name;
     private int _level;
     private uint _freeExp;
 
@@ -14,11 +16,19 @@ public class BaseCharacter : MonoBehaviour {
     public Vital[] vital;
     public Skill[] skill;
 
+    public float meleeAttackTimer = GameSettingtwo.BASE_MELEE_ATTACK_TIMER;
+    public float meleeAttackSpeed = GameSettingtwo.BASE_MELEE_ATTACK_SPEED;
+    public float meleeResetTimer = 0.0f;
+
+    public bool _inCombat;
+    
     public virtual void Awake()
     {
-        _name = string.Empty;
+  //      _name = string.Empty;
         _level = 0;
         _freeExp = 0;
+        _inCombat = false;
+         
         primaryAttribute = new Attribute[Enum.GetValues(typeof(AttributeName)).Length];
         vital = new Vital[Enum.GetValues(typeof(VitalName)).Length];
         skill = new Skill[Enum.GetValues(typeof(SkillName)).Length];
@@ -28,10 +38,10 @@ public class BaseCharacter : MonoBehaviour {
         SetupSkills();
     }
  
-    public string Name {
-        get{ return _name;}
-        set{ _name = value;}
-    }
+ //   public string Name {
+ //       get{ return _name;}
+ //       set{ _name = value;}
+ //   }
 
     public int Level{
         get{return _level;}
@@ -134,8 +144,26 @@ public class BaseCharacter : MonoBehaviour {
     public void StatUpdate(){
         for(int cnt=0; cnt < vital.Length; cnt++) 
             vital[cnt].Update();
+
         for(int cnt=0; cnt < skill.Length; cnt++)
             skill[cnt].Update();
+    }
+
+    public void CalculateMeleeAttackSpeed()
+    {
+
+    }
+
+    public bool InCombat
+    {
+        get
+        {
+            return _inCombat;
+        }
+        set
+        {
+            _inCombat = value;
+        }
     }
 
 }

@@ -17,6 +17,10 @@ public class PlayerInput : MonoBehaviour {
         {
            Messenger.Broadcast("ToggleInventory");
         }
+        if (Input.GetButtonUp("Toggle BeadsBook"))
+        {
+            Messenger.Broadcast("ToggleBeadsBook");
+        }
 
 
         if (Input.GetButtonUp("Toggle Character Window"))

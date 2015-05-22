@@ -3,8 +3,8 @@ using System.Collections;
 
 public class EnemyHealth : MonoBehaviour {
 
-    public int maxHealth = 100;                //최대 체력
-    public int curHealth = 100;                //현재 체력
+    public int maxHealth ;                //최대 체력
+    public int curHealth ;                //현재 체력
 
     public float healthBarLength;
 
@@ -16,7 +16,7 @@ public class EnemyHealth : MonoBehaviour {
 
 
 	}
-	
+	    
 	// Update is called once per frame
 	void Update () {
 
@@ -26,9 +26,6 @@ public class EnemyHealth : MonoBehaviour {
 
     void OnGUI() {
 
-        //체력바 출력(플레이어 체력바 바로 밑)
-        GUI.Box(new Rect(10, 40, healthBarLength, 20), curHealth + "/" + maxHealth);  
-        
     }
 
     public void AdjustCurrentHealth(int adj) {                                    

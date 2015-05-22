@@ -7,8 +7,20 @@ public static class ItemGenerator  {
     public static Item CreateItem()
     {
         // 만들 아이템 타입 결정
+        int rand = Random.Range(0,2);
 
-        Item item =  CreateWeapon();
+        Item item = new Item();
+
+        switch (rand)
+        {
+            case 0:
+                item = CreateWeapon();
+                break;
+            case 1:
+                item = CreateWeapon(); // 비즈로 수정
+                    break;
+        }
+
 
         item.Value = Random.Range(1, 101);
         item.Rarity = RarityTypes.일반;
@@ -29,13 +41,17 @@ public static class ItemGenerator  {
     {
         Weapon meleeWeapon = new Weapon();
 
-        string[] weaponNames = new string[6];
+        string[] weaponNames = new string[10];
         weaponNames[0] = "단검";
         weaponNames[1] = "고급장검";
         weaponNames[2] = "고급단검";
         weaponNames[3] = "장검";
         weaponNames[4] = "메이스";
         weaponNames[5] = "도끼";
+        weaponNames[6] = "Fire";
+        weaponNames[7] = "Earth";
+        weaponNames[8] = "Water";
+        weaponNames[9] = "Lightning";
 
 
 
@@ -49,6 +65,55 @@ public static class ItemGenerator  {
         meleeWeapon.Icon = Resources.Load(GameSettingtwo.MELEE_WEAPON_PATH + meleeWeapon.Name) as Texture2D;
 
         return meleeWeapon;
+    }
+
+    // 비즈
+    public static Beads CreateBeads()
+    {
+        // 만들 아이템 타입 결정
+        int rand = Random.Range(0, 2);
+
+        Beads beads = new Beads();
+
+        switch (rand)
+        {
+            case 0:
+                beads = CreateBeads();
+                break;
+            case 1:
+                beads = CreateBeads(); // 비즈로 수정
+                break;
+        }
+
+        beads.Rarity = BeadsRarityTypes.고대;
+
+        return beads;
+    }
+
+    private static Beads CreateBeadsItem()
+    {
+        Beads beads = CreateMeleeBeads();
+
+        return beads;
+    }
+    private static Beads CreateMeleeBeads()
+    {
+        Beads meleeBeads = new Beads();
+
+        string[] beadsNames = new string[6];
+        beadsNames[0] = "Earth";
+        beadsNames[1] = "Fire";
+        beadsNames[2] = "Lightning";
+        beadsNames[3] = "Water";
+  //      beadsNames[4] = "메이스";
+  //      beadsNames[5] = "도끼";
+
+
+
+        meleeBeads.Name = beadsNames[Random.Range(0, beadsNames.Length)];
+        meleeBeads.Icon = Resources.Load(GameSettingtwo.BEADS_PATH + meleeBeads.Name) as Texture2D;
+
+        return meleeBeads;
     }
 }
 
