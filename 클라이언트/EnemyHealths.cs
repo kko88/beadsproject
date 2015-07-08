@@ -7,6 +7,10 @@ public class EnemyHealths : MonoBehaviour
     public Texture2D frame;
     public Rect framePosition;
 
+
+    public Transform mob;
+    public int mobHP;
+    public int mobMaxHP;
     public float horizontalDistance;
     public float verticalDistance;
     public float width;
@@ -18,10 +22,16 @@ public class EnemyHealths : MonoBehaviour
     public MobMove target; ///수정
     public float healthPercentage;
     void Start () {
-	
+        mob = null;
 	}
 	
 	void Update () {
+        if(mob != null)
+        {
+            mobHP= mob.GetComponent<MobMove>().getHP();
+            mobMaxHP = mob.GetComponent<MobMove>().getMaxHP();
+            Debug.Log("몹 최대체력" + mobMaxHP + "몹현재 체력" + mobHP);
+        }
 
         if (player.transform != null) 
         { 
@@ -58,6 +68,11 @@ public class EnemyHealths : MonoBehaviour
         healthBarPosition.height = framePosition.height * height;
 
         GUI.DrawTexture(healthBarPosition, healthBar);
+    }
+    void targeting(Transform target)
+    {
+        mob = target;
+
     }
 
 }

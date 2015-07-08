@@ -57,15 +57,14 @@ public class MobMove : MonoBehaviour
     private Vector3 _moveDirection;
     private Transform _myTransform;
     private CharacterController _controller;
+   
 
     private Turn _turn;
     private Forward _forward;
     private Turn _strafe;
     private bool _run;
     private bool _jump;
-
     private State _state;
-
     private BaseCharacter _bc;
 
     public int maxHealth;
@@ -74,6 +73,9 @@ public class MobMove : MonoBehaviour
     public LevelSystem playerLevel;
     public int mobExp;
     private int stunTime;
+
+
+
 
 
     public void Awake()
@@ -139,63 +141,72 @@ public class MobMove : MonoBehaviour
     }
     private void ActionPicker()
     {
-        _myTransform.Rotate(0, (int)_turn * Time.deltaTime * rotateSpeed, 0);
-
-
-        if (_controller.isGrounded)
+        if (!IsDead())
         {
-            airTime = 0;
-            _moveDirection = new Vector3((int)_strafe, 0, (int)_forward);
-            _moveDirection = _myTransform.TransformDirection(_moveDirection).normalized;
-            _moveDirection *= walkSpeed;
 
-            if (_forward != Forward.none)
+            _myTransform.Rotate(0, (int)_turn * Time.deltaTime * rotateSpeed, 0);
+
+
+            if (_controller.isGrounded)
             {
-                if (_run)
+                airTime = 0;
+                _moveDirection = new Vector3((int)_strafe, 0, (int)_forward);
+                _moveDirection = _myTransform.TransformDirection(_moveDirection).normalized;
+                _moveDirection *= walkSpeed;
+
+                if (_forward != Forward.none)
                 {
-                    _moveDirection *= runMultiplier;
-                    Run();
+                    if (_run)
+                    {
+                        _moveDirection *= runMultiplier;
+                        Run();
+                    }
+                    else
+                    {
+                        Walk();
+                    }
+                }
+                else if (_strafe != MobMove.Turn.none)
+                {
+                    Strafe();
                 }
                 else
                 {
-                    Walk();
+                    Idle();
                 }
-            }
-            else if (_strafe != MobMove.Turn.none)
-            {
-                Strafe();
+
+                if (_jump)
+                {
+                    if (airTime < jumpTime)
+                    {
+                        _moveDirection.y += jumpHeight;
+                        Jump();
+                        _jump = false;
+                    }
+
+                }
             }
             else
             {
-                Idle();
-            }
-
-            if (_jump)
-            {
-                if (airTime < jumpTime)
+                if ((_collisionFlags & CollisionFlags.CollidedBelow) == 0)
                 {
-                    _moveDirection.y += jumpHeight;
-                    Jump();
-                    _jump = false;
+                    airTime += Time.deltaTime;
+                    if (airTime > fallTime)
+                    {
+                        Fall();
+                    }
                 }
 
             }
+
+            _moveDirection.y -= gravity * Time.deltaTime;
+            _collisionFlags = _controller.Move(_moveDirection * Time.deltaTime);
         }
+
         else
         {
-            if ((_collisionFlags & CollisionFlags.CollidedBelow) == 0)
-            {
-                airTime += Time.deltaTime;
-                if (airTime > fallTime)
-                {
-                    Fall();
-                }
-            }
-
+            DieMethod();
         }
-
-        _moveDirection.y -= gravity * Time.deltaTime;
-        _collisionFlags = _controller.Move(_moveDirection * Time.deltaTime);
     }
 
 
@@ -212,6 +223,17 @@ public class MobMove : MonoBehaviour
     public void RotateMe(Turn y)
     {
         _turn = y;
+    }
+
+    public int getMaxHP()
+    {
+        return maxHealth;
+    }
+
+    public int getHP()
+    {
+        return Health;
+        
     }
 
     public void Strafe(Turn x)
@@ -265,6 +287,7 @@ public class MobMove : MonoBehaviour
             animation.CrossFade(fallAnimName);
     }
 
+    
     public void Die()
     {
         if (dieAnimName == "")
@@ -285,7 +308,7 @@ public class MobMove : MonoBehaviour
         }
         else
         {
-            DieMethod();
+        //   DieMethod();
         }
     }
     public void getStun(int seconds)
@@ -312,8 +335,9 @@ public class MobMove : MonoBehaviour
             Health = 0;
         }
     }
-    void DieMethod()
+    public void DieMethod()
     {
+        animation[dieAnimName].wrapMode = WrapMode.Once;
         animation.Play(dieAnimName);
         audio.PlayOneShot(dieSound);
 
@@ -321,8 +345,11 @@ public class MobMove : MonoBehaviour
         {
             playerLevel.exp = playerLevel.exp + mobExp;
             Destroy(gameObject);
+            GameObject.Find("pc").SendMessage("TargetClear");
         }
     }
+
+
     bool IsDead()
     {
         if (Health <= 0)
@@ -333,6 +360,7 @@ public class MobMove : MonoBehaviour
         {
             return false;
         }
+
     }
     
 }

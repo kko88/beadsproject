@@ -23,18 +23,20 @@ public class PowerAttack : MonoBehaviour
         {
             player.ResetAttackAct();
             player.powerAttack = true;
-            inAction = true;    
-        }
+            inAction = true;
+        //    animation.Play(Stunclip.name);
+        }   
         if (inAction)
         {
             if (player.AttackAct(stunTime, damagePercentage, key, particleEffect))
             {
-               
+            //    animation.Play(Stunclip.name);
             }
             else
             {
                 inAction = false;
             }
         }
+
     }
 }

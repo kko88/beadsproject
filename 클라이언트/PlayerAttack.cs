@@ -7,7 +7,9 @@ using System.Collections.Generic;
 public class PlayerAttack : MonoBehaviour {
 
     // 타겟팅+어택
+
     
+
     public List<Transform> targets; // transform 리스트
     public Transform selectedTarget;
     public Transform myTransform;
@@ -15,8 +17,10 @@ public class PlayerAttack : MonoBehaviour {
   //  public float attackTimer; // 공격시간
   //  public float coolDown;  // 쿨다운
     public AnimationClip attackClip;
+    public AnimationClip sAttackClip;
     public AnimationClip Dieclip;
     public AudioClip attackSound;
+ //   public AnimationClip Stunclip;
 
     private float attackTime;
 
@@ -24,10 +28,16 @@ public class PlayerAttack : MonoBehaviour {
     public int maxHealth;
     public int Health;
 
+    public int targetMaxHP;
+    public int targetHP;
+
+
     private double ImpactLength;
     public double ImpactTime;
     public bool Impacted;
     public bool inAction;
+    public bool inSAction;
+    public GameObject particleEffect;
 
 //    public float Range;
 
@@ -40,12 +50,14 @@ public class PlayerAttack : MonoBehaviour {
 
     public bool powerAttack;
 
+
+
     public void Awake()
     {
      //   target = transform.GetComponent<TargetMob>().selectedTarget;
      //   attackTime = animation[attackClip.name].time;
     }
-
+    
 	void Start () {
         targets = new List<Transform>(); // 타겟에 저장
         selectedTarget = null;
@@ -65,9 +77,13 @@ public class PlayerAttack : MonoBehaviour {
             TargetEnemy();
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && !powerAttack)
+        if (Input.GetKeyDown(KeyCode.F) )
         {
             inAction = true;
+        }
+        if (Input.GetKeyDown(KeyCode.P) )
+        {
+            inSAction = true;
         }
         if (inAction)
         {
@@ -80,63 +96,92 @@ public class PlayerAttack : MonoBehaviour {
                 inAction = false;
             }
         }
+        if (inSAction)
+        {
+            if (AttackAct(5, 1, KeyCode.P, particleEffect))
+            {
+
+            }
+            else
+            {
+                inSAction = false;
+            }
+        }
 
      //   Die();
          
     }
 
-    public void AddAllEnemies()
+
+    public void AddAllEnemies()  // 모든적 타겟에 넣기
     {
         GameObject[] go = GameObject.FindGameObjectsWithTag("Enemy");
 
-        foreach (GameObject enemy in go)
+        foreach (GameObject enemy in go)  // foreach문 go 배열에 enemy 만큼 Addtarget 함수에 넣어서 실행
             AddTarget(enemy.transform);
     }
-    public void AddTarget(Transform enemy)
+
+    public void AddTarget(Transform enemy)  
     {
-        targets.Add(enemy);
+            targets.Add(enemy);             // 좌표 형태 enmey 받아서 리스트에 더해준다.
     }
-    private void SortTargetsByDistance()
+
+    private void SortTargetsByDistance()        // 거리 비교 후 정렬
     {
-        targets.Sort(delegate(Transform t1, Transform t2)
-        {
-            return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
-        });
+            targets.Sort(delegate(Transform t1, Transform t2)
+            {
+                return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
+            });
+        
     }
+    public void TargetClear()
+    {
+        targets.Clear();
+        selectedTarget = null;
+    }
+
+
     public void TargetEnemy()
     {
-        if (targets.Count == 0)
-            AddAllEnemies();
+        
 
+                if (targets.Count == 0)
+                    AddAllEnemies();    
 
-        if (targets.Count > 0)
-        {
-            if (selectedTarget == null) // 적이없을때    
-            {
-                SortTargetsByDistance();
-                selectedTarget = targets[0];
-            }
-
-            else
-            {
-                int index = targets.IndexOf(selectedTarget);
-
-                if (index < targets.Count - 1)
+                if (targets.Count > 0)
                 {
-                    index++;
+                    if (selectedTarget == null) // 선택된 적이없을때    
+                    {
+                        SortTargetsByDistance();  // 거리재기 함수
+                        selectedTarget = targets[0]; // 거리순 가장 근접한 적 선택
+                        
+                    }
+
+                    else
+                    {
+                        int index = targets.IndexOf(selectedTarget);
+
+                        if (index < targets.Count - 1)
+                        {
+                            index++;
+                        }
+                        else
+                        {
+                            index = 0;
+                        }
+                        DeselectTarget();    // 선택안된 타겟 같이 보여짐
+                        selectedTarget = targets[index];
+                        
+                    }
+                    SelectTarget();
+                    GameObject.Find("GUI").SendMessage("targeting", selectedTarget);
+                    
+                    //        print(life);
                 }
-                else
-                {
-                    index = 0;
-                }
-                DeselectTarget();    // 선택안된 타겟 같이 보여짐
-                selectedTarget = targets[index];
-            }
-            SelectTarget();
-        }
+     }
 
 
-    }
+    
 
 
     public void SelectTarget() // 선택
@@ -151,35 +196,44 @@ public class PlayerAttack : MonoBehaviour {
         name.GetComponent<TextMesh>().text = selectedTarget.GetComponent<Mob>().name;
         name.GetComponent<MeshRenderer>().enabled = true;
         selectedTarget.GetComponent<Mob>().DisplayHealth();
-     //   Debug.Log(selectedTarget.name);
-
+        
    //     Messenger<bool>.Broadcast("몹 체력 보기", true);
+     
     }
+
 
     private void DeselectTarget() // 선택안된 나머지 
     {
         selectedTarget.FindChild("Name").GetComponent<MeshRenderer>().enabled = false;
         selectedTarget = null;
-
-
       //  Messenger<bool>.Broadcast("몹 체력 보기", false);
     }
 
     public bool AttackAct(int stunSeconds, double scaleDamage, KeyCode key, GameObject particleEffect)
     {
-            animation.Play(attackClip.name);
-
-        if (animation[attackClip.name].time > 0.9 * animation[attackClip.name].length)
+        if (key == KeyCode.F)
         {
-            Impacted = false;
-            if (powerAttack)
+            animation.Play(attackClip.name);
+            if (animation[attackClip.name].time > 0.9 * animation[attackClip.name].length)
             {
-                powerAttack = false;
+                Impacted = false;
+                return false;
             }
-            return false;
-        }
 
-        Impact(stunSeconds, scaleDamage, particleEffect);
+            Impact(stunSeconds, scaleDamage, particleEffect, attackClip.name);
+        }
+        if (key == KeyCode.P)
+        {
+            animation.Play(sAttackClip.name);
+
+            if (animation[sAttackClip.name].time > 0.9 * animation[sAttackClip.name].length)
+            {
+                Impacted = false;
+                return false;
+            }
+
+            Impact(stunSeconds, scaleDamage, particleEffect, sAttackClip.name);
+        }
         return true;
     }
   
@@ -190,15 +244,13 @@ public class PlayerAttack : MonoBehaviour {
     }
 
 
-    void Impact(int stunSeconds, double scaleDamage, GameObject particleEffect)
+    void Impact(int stunSeconds, double scaleDamage, GameObject particleEffect,string aniName)
     {
+        if (selectedTarget == null) return;
           Transform target= selectedTarget.FindChild("Name");
-//        GameObject target = selectedTarget.FindChild("Name");
-//        Transform target = selectedTarget.FindChild("Name");
-//        Debug.Log("타겟");
-        if (selectedTarget != null && animation.IsPlaying(attackClip.name) && !Impacted)
+          if (selectedTarget != null && animation.IsPlaying(aniName) && !Impacted)
         {
-            if ((animation[attackClip.name].time) > ImpactLength && (animation[attackClip.name].time < 0.9 * animation[attackClip.name].length))
+            if ((animation[aniName].time) > ImpactLength && (animation[aniName].time < 0.9 * animation[aniName].length))
             {
                 countDown = combatEscapeTime + 2;
                 CancelInvoke("combatEscapeCountDown");
@@ -266,6 +318,7 @@ public class PlayerAttack : MonoBehaviour {
             }
         }
     }
+
 
 }
 

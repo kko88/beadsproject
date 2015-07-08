@@ -87,7 +87,7 @@ public class TargetMob : MonoBehaviour
         name.GetComponent<MeshRenderer>().enabled = true;
         selectedTarget.GetComponent<Mob>().DisplayHealth();
         Debug.Log(selectedTarget.name);
-
+        Messenger<bool>.Broadcast("Life", true);
       //  Messenger<bool>.Broadcast("몹 체력 보기", true);
     }
 
