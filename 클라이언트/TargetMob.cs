@@ -24,7 +24,7 @@ public class TargetMob : MonoBehaviour
         foreach (GameObject enemy in go)
             AddTarget(enemy.transform);
     }
-        
+
     public void AddTarget(Transform enemy)
     {
         targets.Add(enemy);
@@ -35,7 +35,7 @@ public class TargetMob : MonoBehaviour
     {
         targets.Sort(delegate(Transform t1, Transform t2)
         {
-           return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
+            return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
         });
     }
     public void TargetEnemy()
@@ -43,37 +43,37 @@ public class TargetMob : MonoBehaviour
         if (targets.Count == 0)
             AddAllEnemies();
 
-        
+
         if (targets.Count > 0)
         {
-                if (selectedTarget == null) // 적이없을때    
-                {
-                    SortTargetsByDistance();
-                    selectedTarget = targets[0];
-                }
+            if (selectedTarget == null) // 적이없을때    
+            {
+                SortTargetsByDistance();
+                selectedTarget = targets[0];
+            }
 
+            else
+            {
+                int index = targets.IndexOf(selectedTarget);
+
+                if (index < targets.Count - 1)
+                {
+                    index++;
+                }
                 else
                 {
-                    int index = targets.IndexOf(selectedTarget);
-
-                    if (index < targets.Count - 1)
-                    {
-                        index++;
-                    }
-                    else
-                    {
-                        index = 0;
-                    }
-                    DeselectTarget();    // 선택안된 타겟 같이 보여짐
-                    selectedTarget = targets[index];
+                    index = 0;
                 }
-                SelectTarget();    
+                DeselectTarget();    // 선택안된 타겟 같이 보여짐
+                selectedTarget = targets[index];
+            }
+            SelectTarget();
         }
-        
-        
+
+
     }
 
-    
+
     public void SelectTarget() // 선택
     {
         Transform name = selectedTarget.FindChild("Name");
@@ -83,12 +83,12 @@ public class TargetMob : MonoBehaviour
             return;
         }
 
-        name.GetComponent<TextMesh>().text =  selectedTarget.GetComponent<Mob>().name;
+        name.GetComponent<TextMesh>().text = selectedTarget.GetComponent<Mob>().name;
         name.GetComponent<MeshRenderer>().enabled = true;
         selectedTarget.GetComponent<Mob>().DisplayHealth();
         Debug.Log(selectedTarget.name);
         Messenger<bool>.Broadcast("Life", true);
-      //  Messenger<bool>.Broadcast("몹 체력 보기", true);
+        //  Messenger<bool>.Broadcast("몹 체력 보기", true);
     }
 
     private void DeselectTarget() // 선택안된 나머지 
@@ -97,7 +97,7 @@ public class TargetMob : MonoBehaviour
         selectedTarget = null;
 
 
-    //   Messenger<bool>.Broadcast("몹 체력 보기", false);
+        //   Messenger<bool>.Broadcast("몹 체력 보기", false);
     }
 
     void Update()

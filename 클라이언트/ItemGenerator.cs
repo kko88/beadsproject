@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class ItemGenerator  {
+public class ItemGenerator  {
 
     public const int BASE_MELEE_RANGE = 1; 
     public const int BASE_RANGED_RANGE = 5;
@@ -105,8 +105,6 @@ public static class ItemGenerator  {
         beadsNames[1] = "Fire";
         beadsNames[2] = "Lightning";
         beadsNames[3] = "Water";
-  //      beadsNames[4] = "메이스";
-  //      beadsNames[5] = "도끼";
 
 
 

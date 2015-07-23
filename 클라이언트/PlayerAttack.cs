@@ -4,23 +4,25 @@ using System.Collections.Generic;
 
 
 [RequireComponent(typeof(AudioSource))]
-public class PlayerAttack : MonoBehaviour {
+public class PlayerAttack : MonoBehaviour
+{
 
     // 타겟팅+어택
 
-    
+
 
     public List<Transform> targets; // transform 리스트
     public Transform selectedTarget;
     public Transform myTransform;
 
-  //  public float attackTimer; // 공격시간
-  //  public float coolDown;  // 쿨다운
+    //  public float attackTimer; // 공격시간
+    //  public float coolDown;  // 쿨다운
     public AnimationClip attackClip;
-    public AnimationClip sAttackClip;
+    public AnimationClip sAttackClip;  // 스턴공격
     public AnimationClip Dieclip;
+    public AnimationClip rAttackClip; // 범위공격
     public AudioClip attackSound;
- //   public AnimationClip Stunclip;
+    public AudioClip rAttackSound;  // 범위공격 사운드
 
     private float attackTime;
 
@@ -35,11 +37,14 @@ public class PlayerAttack : MonoBehaviour {
     private double ImpactLength;
     public double ImpactTime;
     public bool Impacted;
+    public bool RImpacted;
     public bool inAction;
     public bool inSAction;
-    public GameObject particleEffect;
-
-//    public float Range;
+    public bool inRAction;
+    public GameObject sparticleEffect;
+    public GameObject rparticleEffect;
+    public GameObject Attack;
+    //    public float Range;
 
     bool Started;
     bool Ended;
@@ -54,21 +59,22 @@ public class PlayerAttack : MonoBehaviour {
 
     public void Awake()
     {
-     //   target = transform.GetComponent<TargetMob>().selectedTarget;
-     //   attackTime = animation[attackClip.name].time;
+        //   target = transform.GetComponent<TargetMob>().selectedTarget;
+        //   attackTime = animation[attackClip.name].time;
     }
-    
-	void Start () {
+
+    void Start()
+    {
         targets = new List<Transform>(); // 타겟에 저장
         selectedTarget = null;
         myTransform = transform;
         AddAllEnemies();
-   //     attackTimer = 0;
-   //     coolDown = 1.0f;
+        //     attackTimer = 0;F
+        //     coolDown = 1.0f;
 
         Health = maxHealth;
         ImpactLength = (animation[attackClip.name].length * ImpactTime);
-	}
+    }
     void Update()
     {
 
@@ -76,20 +82,27 @@ public class PlayerAttack : MonoBehaviour {
         {
             TargetEnemy();
         }
-
-        if (Input.GetKeyDown(KeyCode.F) )
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             inAction = true;
         }
-        if (Input.GetKeyDown(KeyCode.P) )
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             inSAction = true;
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            inRAction = true;
+            //GameObject attackpre = Instantiate(Attack, transform.position, transform.rotation)
+            // as GameObject;
+            //Destroy(attackpre, 100);
+            
+        }
         if (inAction)
         {
-            if (AttackAct(0, 1, KeyCode.F, null))
+            if (AttackAct(0, 1, KeyCode.Alpha1, null))
             {
-
             }
             else
             {
@@ -98,7 +111,7 @@ public class PlayerAttack : MonoBehaviour {
         }
         if (inSAction)
         {
-            if (AttackAct(5, 1, KeyCode.P, particleEffect))
+            if (AttackAct(5, 1, KeyCode.Alpha2, sparticleEffect))
             {
 
             }
@@ -106,10 +119,21 @@ public class PlayerAttack : MonoBehaviour {
             {
                 inSAction = false;
             }
+        } 
+        if (inRAction)
+        {
+            if (AttackAct(0, 1, KeyCode.Alpha3, rparticleEffect))
+            {
+
+            }
+            else
+            {
+                inRAction = false;
+            }
         }
 
-     //   Die();
-         
+        //   Die();
+
     }
 
 
@@ -121,18 +145,18 @@ public class PlayerAttack : MonoBehaviour {
             AddTarget(enemy.transform);
     }
 
-    public void AddTarget(Transform enemy)  
+    public void AddTarget(Transform enemy)
     {
-            targets.Add(enemy);             // 좌표 형태 enmey 받아서 리스트에 더해준다.
+        targets.Add(enemy);             // 좌표 형태 enmey 받아서 리스트에 더해준다.
     }
 
     private void SortTargetsByDistance()        // 거리 비교 후 정렬
     {
-            targets.Sort(delegate(Transform t1, Transform t2)
-            {
-                return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
-            });
-        
+        targets.Sort(delegate(Transform t1, Transform t2)
+        {
+            return Vector3.Distance(t1.position, myTransform.position).CompareTo(Vector3.Distance(t2.position, myTransform.position));
+        });
+
     }
     public void TargetClear()
     {
@@ -143,45 +167,44 @@ public class PlayerAttack : MonoBehaviour {
 
     public void TargetEnemy()
     {
-        
 
-                if (targets.Count == 0)
-                    AddAllEnemies();    
 
-                if (targets.Count > 0)
+        if (targets.Count == 0)
+            AddAllEnemies();
+
+        if (targets.Count > 0)
+        {
+            if (selectedTarget == null) // 선택된 적이없을때    
+            {
+                SortTargetsByDistance();  // 거리재기 함수
+                selectedTarget = targets[0]; // 거리순 가장 근접한 적 선택
+
+            }
+
+            else
+            {
+                int index = targets.IndexOf(selectedTarget);
+
+                if (index < targets.Count - 1)
                 {
-                    if (selectedTarget == null) // 선택된 적이없을때    
-                    {
-                        SortTargetsByDistance();  // 거리재기 함수
-                        selectedTarget = targets[0]; // 거리순 가장 근접한 적 선택
-                        
-                    }
-
-                    else
-                    {
-                        int index = targets.IndexOf(selectedTarget);
-
-                        if (index < targets.Count - 1)
-                        {
-                            index++;
-                        }
-                        else
-                        {
-                            index = 0;
-                        }
-                        DeselectTarget();    // 선택안된 타겟 같이 보여짐
-                        selectedTarget = targets[index];
-                        
-                    }
-                    SelectTarget();
-                    GameObject.Find("GUI").SendMessage("targeting", selectedTarget);
-                    
-                    //        print(life);
+                    index++;
                 }
-     }
+                else
+                {
+                    index = 0;
+                }
+                DeselectTarget();    // 선택안된 타겟 같이 보여짐
+                selectedTarget = targets[index];
+
+            }
+            SelectTarget();
+            GameObject.Find("GUI").SendMessage("targeting", selectedTarget);
+
+        }
+    }
 
 
-    
+
 
 
     public void SelectTarget() // 선택
@@ -196,9 +219,9 @@ public class PlayerAttack : MonoBehaviour {
         name.GetComponent<TextMesh>().text = selectedTarget.GetComponent<Mob>().name;
         name.GetComponent<MeshRenderer>().enabled = true;
         selectedTarget.GetComponent<Mob>().DisplayHealth();
-        
-   //     Messenger<bool>.Broadcast("몹 체력 보기", true);
-     
+
+        //     Messenger<bool>.Broadcast("몹 체력 보기", true);
+
     }
 
 
@@ -206,12 +229,12 @@ public class PlayerAttack : MonoBehaviour {
     {
         selectedTarget.FindChild("Name").GetComponent<MeshRenderer>().enabled = false;
         selectedTarget = null;
-      //  Messenger<bool>.Broadcast("몹 체력 보기", false);
+        //  Messenger<bool>.Broadcast("몹 체력 보기", false);
     }
 
     public bool AttackAct(int stunSeconds, double scaleDamage, KeyCode key, GameObject particleEffect)
     {
-        if (key == KeyCode.F)
+        if (key == KeyCode.Alpha1)
         {
             animation.Play(attackClip.name);
             if (animation[attackClip.name].time > 0.9 * animation[attackClip.name].length)
@@ -222,7 +245,7 @@ public class PlayerAttack : MonoBehaviour {
 
             Impact(stunSeconds, scaleDamage, particleEffect, attackClip.name);
         }
-        if (key == KeyCode.P)
+        if (key == KeyCode.Alpha2)
         {
             animation.Play(sAttackClip.name);
 
@@ -234,21 +257,34 @@ public class PlayerAttack : MonoBehaviour {
 
             Impact(stunSeconds, scaleDamage, particleEffect, sAttackClip.name);
         }
+        if (key == KeyCode.Alpha3)
+        {
+            animation.Play(rAttackClip.name);
+
+            if (animation[rAttackClip.name].time > 0.9 * animation[rAttackClip.name].length)
+            {
+                RImpacted = false;
+                return false;
+            }
+
+            RImpact(stunSeconds, scaleDamage, particleEffect, rAttackClip.name);
+        }
         return true;
     }
-  
+
     public void ResetAttackAct()
     {
         Impacted = false;
+        RImpacted = false;
         animation.Stop(attackClip.name);
     }
 
 
-    void Impact(int stunSeconds, double scaleDamage, GameObject particleEffect,string aniName)
+    void Impact(int stunSeconds, double scaleDamage, GameObject particleEffect, string aniName)
     {
         if (selectedTarget == null) return;
-          Transform target= selectedTarget.FindChild("Name");
-          if (selectedTarget != null && animation.IsPlaying(aniName) && !Impacted)
+        Transform target = selectedTarget.FindChild("Name");
+        if (selectedTarget != null && animation.IsPlaying(aniName) && !Impacted)
         {
             if ((animation[aniName].time) > ImpactLength && (animation[aniName].time < 0.9 * animation[aniName].length))
             {
@@ -266,6 +302,36 @@ public class PlayerAttack : MonoBehaviour {
             }
         }
     }
+
+    void RImpact(int stunSeconds, double scaleDamage, GameObject particleEffect, string aniName)
+    {
+
+        if (animation.IsPlaying(aniName) && !RImpacted)
+        {
+            if ((animation[aniName].time) > ImpactLength && (animation[aniName].time < 0.9 * animation[aniName].length))
+            {
+                countDown = combatEscapeTime + 2;
+                CancelInvoke("combatEscapeCountDown");
+                InvokeRepeating("combatEscapeCountDown", 0, 1);
+                audio.PlayOneShot(rAttackSound);
+                if (particleEffect != null)
+                {
+                    GameObject[] go = GameObject.FindGameObjectsWithTag("Enemy");
+
+                    foreach (GameObject enemy in go)
+                    { 
+                        if (Vector3.Distance(enemy.transform.position, transform.position) < 30)
+                        {
+                            enemy.SendMessage("getHit", 40);
+                        }
+                    }
+                    Instantiate(particleEffect, new Vector3(transform.position.x, transform.position.y + 4f,transform.position.z), Quaternion.identity);
+                }
+                RImpacted = true;
+            }
+        }
+    }
+
 
     void combatEscapeCountDown()
     {
@@ -321,4 +387,3 @@ public class PlayerAttack : MonoBehaviour {
 
 
 }
-

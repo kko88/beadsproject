@@ -37,6 +37,7 @@ public class MobMove : MonoBehaviour
     public string strafeAnimName;
     public string fallAnimName;
     public string dieAnimName;
+    public string damagedAnimName;
 
     public AnimationClip meleeAttack;
     public AnimationClip idleIncombat;
@@ -57,7 +58,11 @@ public class MobMove : MonoBehaviour
     private Vector3 _moveDirection;
     private Transform _myTransform;
     private CharacterController _controller;
-   
+
+    public GameObject healthBarPrefab; //체력게이지프리팹을담음
+    public GameObject camera;
+    private GameObject healthBarObj;//프리팹으로 생성한 인스턴스를 담음
+
 
     private Turn _turn;
     private Forward _forward;
@@ -81,22 +86,31 @@ public class MobMove : MonoBehaviour
     public void Awake()
     {
         _myTransform = transform;
-        
+
         _controller = GetComponent<CharacterController>();
-        
+
         _state = MobMove.State.Init;
 
         _bc = gameObject.GetComponent<BaseCharacter>();
 
         Health = maxHealth;
 
+        
     }
 
     IEnumerator Start()
     {
-
+        camera = GameObject.Find("Main Camera");
+        healthBarObj = Instantiate(healthBarPrefab, transform.position + new Vector3(0, 5, 0), transform.rotation)
+             as GameObject;
         while (true)
         {
+            float healthPercent = Health * 100 / maxHealth;
+            healthBarObj.transform.position = transform.position + new Vector3(0, 5, 0);
+            healthBarObj.transform.LookAt(camera.transform.position);
+           
+            healthBarObj.transform.localScale=new Vector3(healthPercent/100,1,1);
+        
             switch (_state)
             {
                 case State.Init:
@@ -233,7 +247,7 @@ public class MobMove : MonoBehaviour
     public int getHP()
     {
         return Health;
-        
+
     }
 
     public void Strafe(Turn x)
@@ -249,8 +263,8 @@ public class MobMove : MonoBehaviour
     {
         if (idleAnimName == "")
             return;
-        if(!_bc.InCombat)
-        animation.CrossFade(idleAnimName);
+        if (!_bc.InCombat)
+            animation.CrossFade(idleAnimName);
 
     }
 
@@ -284,17 +298,17 @@ public class MobMove : MonoBehaviour
     {
         if (fallAnimName == "")
             return;
-            animation.CrossFade(fallAnimName);
+        animation.CrossFade(fallAnimName);
     }
 
-    
+
     public void Die()
     {
         if (dieAnimName == "")
             return;
         animation.CrossFade(dieAnimName);
     }
-    
+
     public void PlayMeleeAttack()
     {
         if (!IsDead())
@@ -308,7 +322,7 @@ public class MobMove : MonoBehaviour
         }
         else
         {
-        //   DieMethod();
+            //   DieMethod();
         }
     }
     public void getStun(int seconds)
@@ -328,6 +342,8 @@ public class MobMove : MonoBehaviour
     }
     public void getHit(double Damage)
     {
+        animation[damagedAnimName].wrapMode = WrapMode.Once;
+        animation.Play(damagedAnimName);
         Health = Health - (int)Damage;
 
         if (Health < 0)
@@ -343,7 +359,7 @@ public class MobMove : MonoBehaviour
 
         if (animation[dieAnimName].time > animation[dieAnimName].length * 0.9)
         {
-            playerLevel.exp = playerLevel.exp + mobExp;
+            GameObject.Find("pc").SendMessage("expPlus",mobExp);
             Destroy(gameObject);
             GameObject.Find("pc").SendMessage("TargetClear");
         }
@@ -362,5 +378,5 @@ public class MobMove : MonoBehaviour
         }
 
     }
-    
+
 }

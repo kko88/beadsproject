@@ -17,6 +17,7 @@ public class Mob : BaseCharacter{
 #endif 
 
     static public GameObject target;
+    static public GameObject camera;
     private Transform displayName;
 
 
@@ -31,9 +32,9 @@ public class Mob : BaseCharacter{
     void Start()
     {
         Transform displayName = transform.FindChild("Name");
+        camera = GameObject.Find("Main Camera");
 
         displayName.GetComponent<TextMesh>().text = name;
-
 
       /*  target = GameObject.FindGameObjectWithTag(PlayerCharacter.PLAYER_TAG);
 
@@ -82,14 +83,12 @@ public class Mob : BaseCharacter{
             return;
         }
 
-        if (target == null)
-        {
   
-            return;
-        }
-        
-        displayName.LookAt(target.transform);
-        displayName.Rotate(new Vector3(0, 180, 0));
+
+        //Debug.Log("!!!");
+
+        displayName.LookAt(camera.transform);
+        //displayName.Rotate(new Vector3(0, 180, 0));
     }
 
 #if DEBUGGER
