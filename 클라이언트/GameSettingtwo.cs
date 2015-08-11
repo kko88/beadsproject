@@ -21,15 +21,16 @@ public static class GameSettingtwo {
   //  public static Vector3 startingPos = new Vector3(-30, -8, 114);
     public const string MELEE_WEAPON_PATH = "Item Icons/Weapon/Melee/";     // 무기 텍스쳐 경로
     public const string MELEE_WEAPON_MESH_PATH = "Item Icons/Weapon/Mesh/";     // 무기 메쉬 경로
-    public const string BEADS_PATH = "Item Icons/Beads/";     // 무기 텍스쳐 경로 
+    public const string BEADS_PATH = "Item Icons/Beads/";     // 비즈 텍스쳐 경로 
      
     public static PlayerCharacter pc;
 
-    // 0 - 메인메뉴
-    // 1 - 캐릭터 생성창
-    // 2 - 튜토리얼
-    // 3 - 본게임
-    public static string[] levelNames = new string[3] { "Main Menu", "Character Generator", "Level1" };
+    // 0 - 메인 로딩씬
+    // 1 - 제너레이터
+    // 2 - 본게임 로딩씬
+    // 3 - 본 게임
+  
+    public static string[] levelNames = new string[4] {"Main Loading", "Character Generator" ,"CG" ,"Level1" };
   
     static GameSettingtwo()
     {

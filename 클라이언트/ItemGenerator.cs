@@ -41,17 +41,13 @@ public class ItemGenerator  {
     {
         Weapon meleeWeapon = new Weapon();
 
-        string[] weaponNames = new string[10];
+        string[] weaponNames = new string[6];
         weaponNames[0] = "단검";
         weaponNames[1] = "고급장검";
         weaponNames[2] = "고급단검";
         weaponNames[3] = "장검";
         weaponNames[4] = "메이스";
         weaponNames[5] = "도끼";
-        weaponNames[6] = "Fire";
-        weaponNames[7] = "Earth";
-        weaponNames[8] = "Water";
-        weaponNames[9] = "Lightning";
 
 
 
@@ -66,7 +62,7 @@ public class ItemGenerator  {
 
         return meleeWeapon;
     }
-
+    /*
     // 비즈
     public static Beads CreateBeads()
     {
@@ -112,7 +108,7 @@ public class ItemGenerator  {
         meleeBeads.Icon = Resources.Load(GameSettingtwo.BEADS_PATH + meleeBeads.Name) as Texture2D;
 
         return meleeBeads;
-    }
+    }*/
 }
 
 

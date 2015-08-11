@@ -48,9 +48,8 @@
     public override string ToolTip()
     {
         return Name + "\n" +
-              "가치" + Value + "\n" +
-              "내구도" + CurDurability + "/" + MaxDurability + "\n" +
-              MaxDamage * DamageVariance + " - " + MaxDamage;
+
+              "공격력" + Damage + "\n";
     }
 
 }

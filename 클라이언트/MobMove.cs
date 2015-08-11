@@ -63,6 +63,8 @@ public class MobMove : MonoBehaviour
     public GameObject camera;
     private GameObject healthBarObj;//프리팹으로 생성한 인스턴스를 담음
 
+    public GameObject itemBag;
+    public float hpbarHeight=5.0f;
 
     private Turn _turn;
     private Forward _forward;
@@ -75,10 +77,12 @@ public class MobMove : MonoBehaviour
     public int maxHealth;
     public int Health;
     public int Damage;
-    public LevelSystem playerLevel;
     public int mobExp;
     private int stunTime;
 
+    public GameObject getLightning;
+    public GameObject getStunE;
+    float i = 0;
 
 
 
@@ -94,19 +98,17 @@ public class MobMove : MonoBehaviour
         _bc = gameObject.GetComponent<BaseCharacter>();
 
         Health = maxHealth;
-
-        
     }
 
     IEnumerator Start()
     {
         camera = GameObject.Find("Main Camera");
-        healthBarObj = Instantiate(healthBarPrefab, transform.position + new Vector3(0, 5, 0), transform.rotation)
+        healthBarObj = Instantiate(healthBarPrefab, transform.position + new Vector3(0, hpbarHeight, 0), transform.rotation)
              as GameObject;
         while (true)
         {
             float healthPercent = Health * 100 / maxHealth;
-            healthBarObj.transform.position = transform.position + new Vector3(0, 5, 0);
+            healthBarObj.transform.position = transform.position + new Vector3(0, hpbarHeight, 0);
             healthBarObj.transform.LookAt(camera.transform.position);
            
             healthBarObj.transform.localScale=new Vector3(healthPercent/100,1,1);
@@ -318,12 +320,10 @@ public class MobMove : MonoBehaviour
                 animation[meleeAttack.name].wrapMode = WrapMode.Once;
                 animation.Play(meleeAttack.name);
                 audio.PlayOneShot(attackSound);
+                GameObject.Find("pc").SendMessage("getHit", Damage);
             }
         }
-        else
-        {
-            //   DieMethod();
-        }
+
     }
     public void getStun(int seconds)
     {
@@ -349,17 +349,23 @@ public class MobMove : MonoBehaviour
         if (Health < 0)
         {
             Health = 0;
+            audio.PlayOneShot(dieSound);   
         }
     }
     public void DieMethod()
     {
         animation[dieAnimName].wrapMode = WrapMode.Once;
         animation.Play(dieAnimName);
-        audio.PlayOneShot(dieSound);
-
+        
         if (animation[dieAnimName].time > animation[dieAnimName].length * 0.9)
         {
             GameObject.Find("pc").SendMessage("expPlus",mobExp);
+            i = Random.RandomRange(1.0f, 2.0f);
+            if (i > 1.9f)
+            {
+                itemBag.transform.position = transform.position;
+                Instantiate(itemBag);
+            }
             Destroy(gameObject);
             GameObject.Find("pc").SendMessage("TargetClear");
         }
@@ -377,6 +383,16 @@ public class MobMove : MonoBehaviour
             return false;
         }
 
+    }
+
+    public void getLightningEffect()
+    { 
+        Instantiate(getLightning, new Vector3(transform.position.x, transform.position.y+1, transform.position.z), Quaternion.identity);
+    }
+
+    public void getStunEffect()
+    {
+        Instantiate(getStunE, new Vector3(transform.position.x, this.GetComponent<CharacterController>().center.y, transform.position.z), Quaternion.identity);
     }
 
 }

@@ -8,6 +8,10 @@ public class myGUI : MonoBehaviour {
 
     public GUISkin mySkin;
 
+    public Texture2D newCursor;
+    public int cWidth;
+    public int cHeight;
+
     public string emptyInventorySlotStyle;  // 인벤 빈칸 슬롯 스타일
     public string closeButtonStyle;         
     public string inventorySlotCommonStyle;  //인벤 아이템 슬롯 스타일  
@@ -19,6 +23,7 @@ public class myGUI : MonoBehaviour {
     public float closeButtonHeights = 30;
 
     public float lootwindowHeight = 70;
+    public float itemLootHeight = 70;
 
     public float buttonWidth = 40;
     public float buttonHeight = 40;
@@ -29,17 +34,21 @@ public class myGUI : MonoBehaviour {
 
     // 루팅창 변수
     private bool _displayLootWindow = false;
+    private bool _displayItemLoot = false;
     private const int LOOT_WINDOW_ID = 0;
+    private const int ITEM_LOOT_ID = 0;
     private Rect _lootwindowRect = new Rect(0, 0, 0, 0);  //루팅창 모양, 크기
+    private Rect _itemLootRect = new Rect(0, 0, 0, 0); // 아이템 루팅 창
     private Vector2 _lootWindowSlider = Vector2.zero;
     public static Chest chest;
+    public static Bag bag;
 
     private string _toolTip = "";
 
     // 인벤토리창 변수
     private bool _displayInventoryWindow = false;
     private const int INVENTORY_WINDOW_ID = 1;
-    private Rect _inventorywindowRect = new Rect(10, 10, 170, 265);   // 인벤토리창 위치
+    private Rect _inventorywindowRect = new Rect(730, 30, Screen.width / 6 - 57, Screen.height / 2 - 55);   // 인벤토리창 위치
     private int _inventoryRows = 6;  // 열
     private int _inventoryCols = 4;  // 행
 
@@ -48,48 +57,55 @@ public class myGUI : MonoBehaviour {
     private Item _selectedItem;
 
     // 비즈도감 변수
-    private bool _displayBeadsBookWindow = false;
+  /*  private bool _displayBeadsBookWindow = false;
     private const int BEADSBOOK_WINDOW_ID = 3;
     private Rect _beadsBookwindowRect = new Rect(230, 10, 170, 265);   // 도감창 위치
     private int _beadsBookRows = 5;  // 열
     private int _beadsBookCols = 5;  // 행
-
+*/
     private float _doubleClickTimers = 0;
     private const float DOUBLE_CLICK_TIMER_THRESHHOLDS = 0.5f;
-    private Beads _selectedItems;
+//    private Beads _selectedItems;
 
     // 캐릭터창 변수
     private bool _displayCharacterWindow = false;
     private const int CHARACTER_WINDOW_ID = 2;
-    private Rect _characterwindowRect = new Rect(450, 10, 170, 265);   // 캐릭터창 위치
+    private Rect _characterwindowRect = new Rect(50, 30, Screen.width / 6, Screen.height / 2 - 30);   // 캐릭터창 위치
     private int _characterPanel = 0;
-    private string[] _characterPanelNames = new string[] { "장비", "스탯", "스킬" };
+    private string[] _characterPanelNames = new string[] { "정보" };
 
     
 	void Start ()
     {
+        Screen.showCursor = false; 
 	}
 
     private void OnEnable()  
     {
+        Messenger.AddListener("DisplayItemLoot", DisplayItemLoot);
         Messenger.AddListener("DisplayLoot", DisplayLoot);
         Messenger.AddListener("ToggleInventory", ToggleInventoryWindow);
-        Messenger.AddListener("ToggleBeadsBook", ToggleBeadsBookWindow);
+     //   Messenger.AddListener("ToggleBeadsBook", ToggleBeadsBookWindow);
         Messenger.AddListener("ToggleCharacterWindow", ToggleCharacterWindow);
         Messenger.AddListener("CloseChest", ClearWindow);
+        Messenger.AddListener("CloseBag", ClearBag);
     }
     private void OnDisable()  
     {
-        Messenger.RemoveListener ("DisplayLoot", DisplayLoot);
+        Messenger.RemoveListener("DisplayItemLoot", DisplayItemLoot);
+        Messenger.RemoveListener("DisplayLoot", DisplayLoot);
         Messenger.RemoveListener("ToggleInventory", ToggleInventoryWindow);
-        Messenger.RemoveListener("ToggleBeadsBook", ToggleBeadsBookWindow);
+    //    Messenger.RemoveListener("ToggleBeadsBook", ToggleBeadsBookWindow);
         Messenger.RemoveListener("ToggleCharacterWindow", ToggleCharacterWindow);
         Messenger.RemoveListener("CloseChest", ClearWindow);
+        Messenger.RemoveListener("CloseBag", ClearBag);
     }
 
 
     void OnGUI()
     {
+       
+
         GUI.skin = mySkin; 
 
         if(_displayCharacterWindow)
@@ -98,13 +114,20 @@ public class myGUI : MonoBehaviour {
         if (_displayInventoryWindow)
             _inventorywindowRect = GUI.Window(INVENTORY_WINDOW_ID, _inventorywindowRect, InventoryWindow, "인벤토리");
 
-        if (_displayBeadsBookWindow)
+    /*    if (_displayBeadsBookWindow)
             _beadsBookwindowRect = GUI.Window(BEADSBOOK_WINDOW_ID, _beadsBookwindowRect, BeadsBookWindow, "도감");
-
+*/
         if (_displayLootWindow)
-            _lootwindowRect = GUI.Window(LOOT_WINDOW_ID, new Rect(_offset, Screen.height - (_offset + lootwindowHeight) , Screen.width - (_offset * 2) - 20, lootwindowHeight - 20), LootWindow, "아이템", "box" );
+            _lootwindowRect = GUI.Window(LOOT_WINDOW_ID, new Rect(_offset, Screen.height - (_offset + lootwindowHeight)+20 , buttonWidths * 3, lootwindowHeight - 20), LootWindow, "아이템", "box" );
+
+        if (_displayItemLoot)
+            _itemLootRect = GUI.Window(ITEM_LOOT_ID, new Rect(Screen.width/2 - _offset, Screen.height/2 + (_offset + itemLootHeight), buttonWidths * 2, itemLootHeight + 10),ItemLoot, "아이템", "box");
+
 
         DisplayToolTip();
+
+        GUI.Label(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, cWidth, cHeight),
+                 newCursor);
     }
 
     private void LootWindow(int id)
@@ -134,14 +157,55 @@ public class myGUI : MonoBehaviour {
                chest.loot.RemoveAt(cnt);  // 아이템 선택하면 삭제
            }
         }
+
+        GUI.EndScrollView();
+
+        SetToolTip();
+    }
+    private void ItemLoot(int id)
+    {
+        GUI.skin = mySkin;
+
+
+        if (GUI.Button(new Rect(_itemLootRect.width - _offset * 2, 0, closeButtonWidth, closeButtonHeight), "", closeButtonStyle))
+            ClearBag();
+
+        if (bag == null)
+            return;
+
+        if (bag.loot.Count == 0)
+        {
+            ClearBag();
+            return;
+        }
+
+        _lootWindowSlider = GUI.BeginScrollView(new Rect(_offset * 0.5f, 10, _itemLootRect.width - 10, 70), _lootWindowSlider, new Rect(0, 0, (bag.loot.Count * buttonWidth) + _offset, buttonHeight + _offset));
+
+
+        for (int cnt = 0; cnt < bag.loot.Count; cnt++)
+        {   // 아이템 루팅 슬롯 사각형
+            if (GUI.Button(new Rect(_offset * 0.5f + (buttonWidth * cnt), _offset, buttonWidth, buttonHeight), new GUIContent(bag.loot[cnt].Icon, bag.loot[cnt].ToolTip()), inventorySlotCommonStyle))
+            {
+                PlayerCharacter.Inventory.Add(bag.loot[cnt]);
+                bag.loot.RemoveAt(cnt);  // 아이템 선택하면 삭제
+            }
+        }
+
+
         GUI.EndScrollView();
 
         SetToolTip();
     }
 
+
     private void DisplayLoot()
     {
        _displayLootWindow = true;
+    }
+
+    private void DisplayItemLoot()
+    {
+        _displayItemLoot = true;
     }
 
     private void ClearWindow()
@@ -149,6 +213,13 @@ public class myGUI : MonoBehaviour {
         _displayLootWindow = false;
         chest.OnMouseUp();
         chest = null;
+    }
+
+    private void ClearBag()
+    {
+        _displayItemLoot = false;
+        bag.OnMouseUp();
+        bag = null;
     }
 
     public void InventoryWindow(int id)
@@ -210,7 +281,7 @@ public class myGUI : MonoBehaviour {
 
     }
 
-    public void BeadsBookWindow(int id)
+  /*  public void BeadsBookWindow(int id)
     {
         int cnt = 0;
         for (int y = 0; y < _beadsBookRows; y++)
@@ -268,19 +339,19 @@ public class myGUI : MonoBehaviour {
         GUI.DragWindow();  // 도감창 드래그
 
     }
-
+*/
 
     public void ToggleInventoryWindow()
     {
         _displayInventoryWindow = !_displayInventoryWindow;
     }
-    public void ToggleBeadsBookWindow() 
+ /*   public void ToggleBeadsBookWindow() 
     {
         _displayBeadsBookWindow = !_displayBeadsBookWindow;
     }
-    public void CharacterWindow(int id)
+ */   public void CharacterWindow(int id)
     {
-        _characterPanel = GUI.Toolbar(new Rect(5, 25, _characterwindowRect.width - 10, 50), _characterPanel, _characterPanelNames);
+        _characterPanel = GUI.Toolbar(new Rect(5, 25, _characterwindowRect.width - 10, 20), _characterPanel, _characterPanelNames);
 
         switch (_characterPanel)
         {
@@ -318,11 +389,15 @@ public class myGUI : MonoBehaviour {
                 PlayerCharacter.EquipedWeapon = null;
             }
         }
+        GUI.Label(new Rect(5, 150, 40, 40), "레벨");
+        GUI.Label(new Rect(5, 180, 40, 40), "HP");
+        GUI.Label(new Rect(5, 210, 40, 40), "MP");
+        GUI.Label(new Rect(5, 240, 40, 40), "공격력");
 
         SetToolTip();
     }
 
-    private void DisplayEquipments()
+   /* private void DisplayEquipments()
     {
         //  GUI.skin = mySkin;
         if (PlayerCharacter.EquipedBeads == null)
@@ -340,7 +415,7 @@ public class myGUI : MonoBehaviour {
         }
 
         SetToolTip();
-    }
+    }*/
     private void DisplayAttributes()
     {
  //       Debug.Log("스탯");
@@ -369,5 +444,6 @@ public class myGUI : MonoBehaviour {
 
             GUI.Box(new Rect(Screen.width / 2 - 100, 10, 200, 100), _toolTip); // 아이템 툴팁 창 
     }
+
 
 }

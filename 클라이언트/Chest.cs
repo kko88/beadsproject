@@ -118,7 +118,7 @@ public class Chest : MonoBehaviour
            audio.PlayOneShot(openSound);
 
            if(!_used)   // 사용되었던 상자가아니면 5개의 랜덤 아이템 생성 (디폴트값 false)
-           PopulateChest(5);    
+           PopulateChest(3);    
 
            yield return new WaitForSeconds(animation[openAnimName].length);
            state = Chest.State.open;

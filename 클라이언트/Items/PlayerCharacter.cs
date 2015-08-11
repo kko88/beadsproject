@@ -10,7 +10,7 @@ public class PlayerCharacter : BaseCharacter {
     public static GameObject[] _weaponMesh;
     private static List<Item> _inventory = new List<Item>();
 
-    private static List<Beads> _beadsBook = new List<Beads>(); 
+  //  private static List<Beads> _beadsBook = new List<Beads>(); 
 
 
     public static List<Item> Inventory
@@ -19,11 +19,11 @@ public class PlayerCharacter : BaseCharacter {
         set { Inventory = value; }
     }
 
-    public static List<Beads> BeadsBook
-    {
-        get { return _beadsBook; }
-        set { BeadsBook = value; }
-    }
+   // public static List<Beads> BeadsBook
+   // {
+   //     get { return _beadsBook; }
+   //     set { BeadsBook = value; }
+   // }
 
     public bool initialized = false;
 
@@ -68,15 +68,7 @@ public class PlayerCharacter : BaseCharacter {
                 default:
 
                     break;  
-            }
-             /*           if (wm.transform.childCount > 0)
-                        {
-                            Destroy(wm.transform.GetChild(0).gameObject);
-                        }
-                        GameObject mesh = Instantiate(Resources.Load(GameSettingtwo.MELEE_WEAPON_MESH_PATH + _equipedWeapon.Name), wm.transform.position, wm.transform.rotation) as GameObject;
-                            mesh.transform.parent = wm.transform;
-                    }*/
-             
+            } 
         }
     }
     public static Beads EquipedBeads

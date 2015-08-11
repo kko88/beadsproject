@@ -6,13 +6,14 @@ public class LevelSystem : MonoBehaviour
 
     public int level;
     public int exp;
-
     public GameObject particleEffect;
     public GameObject clon;
     public PlayerAttack player;
+
     void Start () {
 
         level = 1;
+      
 	}
 	
 	void Update () 
@@ -31,6 +32,7 @@ public class LevelSystem : MonoBehaviour
                 Debug.Log("레벨업");
                 exp = exp - (int)(Mathf.Pow(level, 2) + 100);
                 level = level + 1;
+                GameObject.Find("HUDText").SendMessage("LevelUp", level);
                 LevelEffect();
             }
     }
@@ -48,6 +50,5 @@ public class LevelSystem : MonoBehaviour
     void expPlus(int mobExp)
     {
         exp += mobExp;
-
     }
 }
