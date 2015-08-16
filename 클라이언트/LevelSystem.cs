@@ -34,6 +34,7 @@ public class LevelSystem : MonoBehaviour
                 level = level + 1;
                 GameObject.Find("HUDText").SendMessage("LevelUp", level);
                 LevelEffect();
+                //        GameObject.Find("Level").GetComponent<UILabel>().text = level.ToString();
             }
     }
 

@@ -40,7 +40,7 @@ public class Portal : MonoBehaviour
             audio.Stop();
             GameObject.Find("Main Camera").GetComponent<AudioSource>().audio.clip = dungeonBGM;
             audio.PlayOneShot(GameObject.Find("Main Camera").GetComponent<AudioSource>().audio.clip);
-            gameObject.transform.position = new Vector3(1015, -7, 1380); 
+            gameObject.transform.position = new Vector3(1015, 1, 1398); 
             GameObject.Find("PortalText").SendMessage("EnterDungeon", dungeonName);
        }
         
@@ -51,7 +51,7 @@ public class Portal : MonoBehaviour
             audio.Stop();
             GameObject.Find("Main Camera").GetComponent<AudioSource>().audio.clip = d3BGM;
             audio.PlayOneShot(GameObject.Find("Main Camera").GetComponent<AudioSource>().audio.clip);
-            gameObject.transform.position = new Vector3(-1466, -228, 967);
+            gameObject.transform.position = new Vector3(-252, 14, -1189);
             GameObject.Find("PortalText").SendMessage("EnterD3", d3Name);
         }
 

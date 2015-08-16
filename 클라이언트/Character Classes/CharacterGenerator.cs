@@ -31,7 +31,7 @@ public class CharacterGenerator : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        GameObject pc = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        GameObject pc = Instantiate(playerPrefab, new Vector3(0, -12, 0), Quaternion.Euler(0,180,0)) as GameObject;
 
         pc.name = "pc";
 
@@ -188,7 +188,7 @@ public class CharacterGenerator : MonoBehaviour
     private void DisplayCreateButton() 
     {
         if(GUI.Button(new Rect(
-                Screen.width / 2 - 50, statStartingPos + (10 * LINE_HEIGHT), 100, LINE_HEIGHT  ), "Create"))
+                Screen.width / 2 - 50, statStartingPos + (10 * LINE_HEIGHT+50), 100, LINE_HEIGHT  ), "생성"))
         {
  //           GameSettings gsScript = GameObject.Find("__GameSettings").GetComponent<GameSettings>();
             UpdateCurVitalValues();

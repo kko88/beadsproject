@@ -97,7 +97,7 @@ public class CameraTest : MonoBehaviour {
 
                 
                 currentRotationAngle = Mathf.LerpAngle(currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
-
+ 
                
                 currentHeight = Mathf.Lerp(currentHeight, wantedHeight, heightDamping * Time.deltaTime);
 

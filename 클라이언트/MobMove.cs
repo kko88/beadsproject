@@ -82,6 +82,8 @@ public class MobMove : MonoBehaviour
 
     public GameObject getLightning;
     public GameObject getStunE;
+    private Transform displayName;
+
     float i = 0;
 
 
@@ -98,6 +100,8 @@ public class MobMove : MonoBehaviour
         _bc = gameObject.GetComponent<BaseCharacter>();
 
         Health = maxHealth;
+
+        displayName = transform.FindChild("Name");
     }
 
     IEnumerator Start()
@@ -110,7 +114,9 @@ public class MobMove : MonoBehaviour
             float healthPercent = Health * 100 / maxHealth;
             healthBarObj.transform.position = transform.position + new Vector3(0, hpbarHeight, 0);
             healthBarObj.transform.LookAt(camera.transform.position);
-           
+            displayName.transform.LookAt(camera.transform.position);
+            displayName.Rotate(new Vector3(0, 180, 0));
+
             healthBarObj.transform.localScale=new Vector3(healthPercent/100,1,1);
         
             switch (_state)
@@ -351,6 +357,7 @@ public class MobMove : MonoBehaviour
             Health = 0;
             audio.PlayOneShot(dieSound);   
         }
+
     }
     public void DieMethod()
     {

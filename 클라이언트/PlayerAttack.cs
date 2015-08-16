@@ -113,6 +113,8 @@ public class PlayerAttack : MonoBehaviour
 
     public void Awake()
     {
+     //   DontDestroyOnLoad(this);
+
         nAttackYN = false;
         sAttackYN = false;
         fireYN = false;
@@ -131,9 +133,10 @@ public class PlayerAttack : MonoBehaviour
 
         Health = maxHealth;
         curMp = maxMp;
-//        GameObject.Find("MP").GetComponent<UILabel>().text = curMp.ToString();
-//        GameObject.Find("HP").GetComponent<UILabel>().text = Health.ToString();
         ImpactLength = (animation[attackClip.name].length * ImpactTime);
+
+        //      GameObject.Find("MP").GetComponent<UILabel>().text = curMp.ToString();
+        //       GameObject.Find("HP").GetComponent<UILabel>().text = Health.ToString();
     }
     void Update()
     {
@@ -254,9 +257,7 @@ public class PlayerAttack : MonoBehaviour
             HealingPosition();
         }
 
-     //   Die();
-
-      //   .FindChild("Zone1").GetComponent<MeshRenderer>().enabled = false;
+        Die();
 
     }
 
@@ -340,7 +341,7 @@ public class PlayerAttack : MonoBehaviour
 
         name.GetComponent<TextMesh>().text = selectedTarget.GetComponent<Mob>().name;
         name.GetComponent<MeshRenderer>().enabled = true;
-        selectedTarget.GetComponent<Mob>().DisplayHealth();
+//        selectedTarget.GetComponent<Mob>().DisplayHealth();
 
 
     }
@@ -525,10 +526,10 @@ public class PlayerAttack : MonoBehaviour
         GameObject.Find("hpBar").SendMessage("hpBarCutoff", healthPercent);
         GameObject.Find("GetDamageText").SendMessage("pcGetDamage", Damage);
    //     GameObject.Find("HP").GetComponent<UILabel>().text = Health.ToString();
+        
         if (Health < 0)
         {
             Health = 0;
-   //         GameObject.Find("HP").GetComponent<UILabel>().text = Health.ToString();
             audio.PlayOneShot(dieSound);
             animation.Play(Dieclip.name);
             myTransform.tag = "Chest";
@@ -538,10 +539,11 @@ public class PlayerAttack : MonoBehaviour
     public void wasteMP()
     {
         curMp = curMp - wasteMana;
- //       GameObject.Find("MP").GetComponent<UILabel>().text = curMp.ToString();
         float mpPercent = curMp * 100 / maxMp;
         GameObject.Find("mpBar").SendMessage("mpBarCutoff", mpPercent);
-        GameObject.Find("HUDText").SendMessage("pcMpWaste", wasteMana);
+        GameObject.Find("HUDText").SendMessage("pcMpWaste", wasteMana);  
+//        GameObject.Find("MP").GetComponent<UILabel>().text = curMp.ToString();
+    
         if (curMp < 0)
         {
             curMp = 0;
@@ -570,7 +572,7 @@ public class PlayerAttack : MonoBehaviour
             return false;
         }
     }
-  /*  void Die()
+    void Die()
     {
         if (IsDead() && !Ended)
         {
@@ -584,9 +586,10 @@ public class PlayerAttack : MonoBehaviour
                 animation.Play(Dieclip.name);
                 Ended = true;
                 Started = false;
+                Debug.Log("GameOver");
             }
         }
-    }*/
+    }
 
 
 
@@ -596,7 +599,10 @@ public class PlayerAttack : MonoBehaviour
         float mpPercent = curMp * 100 / maxMp;
         GameObject.Find("HUDText").SendMessage("MpRegen", regenMp);
         GameObject.Find("mpBar").SendMessage("mpBarCutoff", mpPercent);
- //       GameObject.Find("MP").GetComponent<UILabel>().text = curMp.ToString();
+   //     if (mpPercent < 100 && curMp > 0)
+   //     {
+   //         GameObject.Find("MP").GetComponent<UILabel>().text = curMp.ToString();
+   //     }
         audio.PlayOneShot(waterSound);
         animation.Play(waterClip.name);
 
@@ -616,7 +622,10 @@ public class PlayerAttack : MonoBehaviour
         float healthPercent = Health * 100 / maxHealth;
         GameObject.Find("HUDText").SendMessage("HpRegen", regenHp);
         GameObject.Find("hpBar").SendMessage("hpBarCutoff", healthPercent);
-  //      GameObject.Find("HP").GetComponent<UILabel>().text = Health.ToString();
+  //      if (healthPercent < 100 && Health > 0)
+  //      {
+  //          GameObject.Find("HP").GetComponent<UILabel>().text = Health.ToString();
+  //      }
         audio.PlayOneShot(HealSound);
 
         if (healparticleEffect != null)

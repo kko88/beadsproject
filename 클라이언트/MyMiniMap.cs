@@ -51,6 +51,8 @@ public class MyMiniMap : MonoBehaviour
         Vector3 viewPortPos1 = miniCam.WorldToViewportPoint(player.transform.position); // 캐릭터 미니맵
 
         miniPc.transform.position = viewPortPos1;
+
+        
         
 
 

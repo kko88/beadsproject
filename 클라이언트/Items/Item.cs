@@ -75,6 +75,7 @@ public class Item {
     public virtual string ToolTip()
     {
         return Name + "\n" +
+                      "\n" +
                    "공격력" + Damage + "\n";
     }
 }

@@ -13,7 +13,7 @@ public class GameSettings : MonoBehaviour {
     public static string[] levelNames = new string[4] { "Main Loading", "Character Generator", "CG", "Level1" };
     void Awake()
     { 
-        DontDestroyOnLoad(this);
+      //  DontDestroyOnLoad(this);
     }
 
 

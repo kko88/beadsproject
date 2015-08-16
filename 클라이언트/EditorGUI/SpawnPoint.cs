@@ -9,7 +9,6 @@ public class SpawnPoint : MonoBehaviour {
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, 2);
-    //   Gizmos.DrawIcon(transform.position, "spawnpoint1.jpg");
     }
 
 }

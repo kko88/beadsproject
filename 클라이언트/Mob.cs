@@ -31,29 +31,25 @@ public class Mob : BaseCharacter{
 
     void Start()
     {
-        Transform displayName = transform.FindChild("Name");
-        camera = GameObject.Find("Main Camera");
+   //    displayName =  GameObject.FindGameObjectWithTag("Name").transform; ;// this.transform.FindChild("Name");
+  //      camera = GameObject.Find("Main Camera");
+    //    displayName.GetComponent<TextMesh>().text = name;
+    }
 
-        displayName.GetComponent<TextMesh>().text = name;
-
-      /*  target = GameObject.FindGameObjectWithTag(PlayerCharacter.PLAYER_TAG);
-
-        displayName = transform.FindChild("Name");
-
+    void Update()
+    {
+  //      displayName.transform.LookAt(camera.transform.position);
+/*
         if (displayName == null)
         {
-            Debug.Log("이름표시");
             return;
         }
-
-        displayName.GetComponent<TextMesh>().text = Name;*/
+        if(camera == null)
+        {
+            return;
+        }*/
     }
 
-    public void DisplayHealth()
-    {
-   
-
-    }
 
 
     private void Spawn()
@@ -69,27 +65,10 @@ public class Mob : BaseCharacter{
         StatUpdate();
         for (int cnt = 0; cnt < Enum.GetValues(typeof(VitalName)).Length; cnt++)
             GetVital(cnt).CurValue = GetVital(cnt).AdjustedBaseValue;
-
-        
+     
     }
 
-    void Update()
-    {
-//         healthPercentage = (float)hp.Health / (float)hp.maxHealth;
 
-        if (displayName == null)
-        {
-   
-            return;
-        }
-
-  
-
-        //Debug.Log("!!!");
-
-        displayName.LookAt(camera.transform);
-        //displayName.Rotate(new Vector3(0, 180, 0));
-    }
 
 #if DEBUGGER
     void OnGUI()

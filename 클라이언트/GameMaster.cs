@@ -12,15 +12,16 @@ public class GameMaster : MonoBehaviour {
 //    public float zOffset;
 //    public float yOffset;
 //    public float xRotOffset;
-    
+
+    private static GameMaster _instance = null;
+
     private GameObject _pc;
     private PlayerCharacter _pcScript;
 
-    public Vector3 _playerSpawnPointPos;      
+    public Vector3 _playerSpawnPointPos;
 
 	void Start () {
 
-  //      _playerSpawnPointPos = new Vector3(900, 30, 300); // 캐릭터 생성지점 디폴트값
 
         GameObject go = GameObject.Find(GameSettings.PLAYER_SPAWN_POINT);
        
@@ -40,11 +41,7 @@ public class GameMaster : MonoBehaviour {
       
       _pcScript = _pc.GetComponent<PlayerCharacter>(); 
 
-  //    zOffset = -5.0f;
-  //    yOffset = 5.0f;
-  //    xRotOffset = 23f;
-  //    mainCamera.transform.position = new Vector3(_pc.transform.position.x, _pc.transform.position.y + yOffset, _pc.transform.position.z + zOffset);
-  //    mainCamera.transform.Rotate(xRotOffset, 0, 0);
+
 
       LoadCharacter();
     }

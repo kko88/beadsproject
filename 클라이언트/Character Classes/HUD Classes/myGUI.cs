@@ -48,7 +48,7 @@ public class myGUI : MonoBehaviour {
     // 인벤토리창 변수
     private bool _displayInventoryWindow = false;
     private const int INVENTORY_WINDOW_ID = 1;
-    private Rect _inventorywindowRect = new Rect(730, 30, Screen.width / 6 - 57, Screen.height / 2 - 55);   // 인벤토리창 위치
+    private Rect _inventorywindowRect = new Rect(730, 30, Screen.width / 6 - 57, Screen.height / 2 - 110);   // 인벤토리창 위치
     private int _inventoryRows = 6;  // 열
     private int _inventoryCols = 4;  // 행
 
@@ -390,9 +390,16 @@ public class myGUI : MonoBehaviour {
             }
         }
         GUI.Label(new Rect(5, 150, 40, 40), "레벨");
+        GUI.TextField(new Rect(50, 150, 40, 40), GameObject.Find("pc").GetComponent<LevelSystem>().level.ToString(), 5);
+     
         GUI.Label(new Rect(5, 180, 40, 40), "HP");
+        GUI.TextField(new Rect(50,180,40,40),GameObject.Find("pc").GetComponent<PlayerAttack>().Health.ToString() ,5);
+
         GUI.Label(new Rect(5, 210, 40, 40), "MP");
+        GUI.TextField(new Rect(50,210,40,40),GameObject.Find("pc").GetComponent<PlayerAttack>().curMp.ToString() ,5);
+
         GUI.Label(new Rect(5, 240, 40, 40), "공격력");
+        GUI.TextField(new Rect(50, 240, 40, 40), GameObject.Find("pc").GetComponent<PlayerAttack>().Damage.ToString(), 5);
 
         SetToolTip();
     }
