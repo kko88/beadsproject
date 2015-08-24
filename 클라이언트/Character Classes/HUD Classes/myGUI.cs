@@ -37,6 +37,7 @@ public class myGUI : MonoBehaviour {
     private bool _displayItemLoot = false;
     private const int LOOT_WINDOW_ID = 0;
     private const int ITEM_LOOT_ID = 0;
+    private const int CURSOR_ID = 1;
     private Rect _lootwindowRect = new Rect(0, 0, 0, 0);  //루팅창 모양, 크기
     private Rect _itemLootRect = new Rect(0, 0, 0, 0); // 아이템 루팅 창
     private Vector2 _lootWindowSlider = Vector2.zero;
@@ -74,10 +75,13 @@ public class myGUI : MonoBehaviour {
     private int _characterPanel = 0;
     private string[] _characterPanelNames = new string[] { "정보" };
 
+    public bool hotSpotIsCenter = false;
+    public Vector2 adjustHotSpot = Vector2.zero;
+    private Vector2 hotSpot;
     
-	void Start ()
+	void Awake()
     {
-        Screen.showCursor = false; 
+        StartCoroutine("MyCursor");
 	}
 
     private void OnEnable()  
@@ -101,11 +105,29 @@ public class myGUI : MonoBehaviour {
         Messenger.RemoveListener("CloseBag", ClearBag);
     }
 
+      IEnumerator MyCursor() {
+ 
+        //모든 렌더링이 완료될 때까지 대기할테니 렌더링이 완료되면 
+        //깨워 달라고 유니티 엔진에 게 부탁하고 대기합니다.
+        yield return new WaitForEndOfFrame();
+ 
+        //텍스처의 중심을 마우스의 좌표로 사용하는 경우 
+        //텍스처의 폭과 높이의 1/2을 hot Spot 좌표로 입력합니다.
+        if (hotSpotIsCenter) {
+            hotSpot.x = newCursor.width / 2;
+            hotSpot.y = newCursor.height / 2;
+        } 
+        else {
+            //중심을 사용하지 않을 경우 Adjust Hot Spot으로 입력 받은 
+            //것을 사용합니다.
+            hotSpot = adjustHotSpot;
+        }
+        //이제 새로운 마우스 커서를 화면에 표시합니다.
+        Cursor.SetCursor (newCursor, hotSpot, CursorMode.Auto);
+    }
 
     void OnGUI()
     {
-       
-
         GUI.skin = mySkin; 
 
         if(_displayCharacterWindow)
@@ -125,10 +147,10 @@ public class myGUI : MonoBehaviour {
 
 
         DisplayToolTip();
-
-        GUI.Label(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, cWidth, cHeight),
-                 newCursor);
+    //    GUI.DrawTexture(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, cWidth, cHeight),
+    //             newCursor);
     }
+
 
     private void LootWindow(int id)
     {

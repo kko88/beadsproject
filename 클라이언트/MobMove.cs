@@ -321,7 +321,7 @@ public class MobMove : MonoBehaviour
     {
         if (!IsDead())
         {
-            if (stunTime <= 0)
+            if (stunTime <= 0 && GameObject.Find("pc").GetComponent<PlayerAttack>().GetDie())
             {
                 animation[meleeAttack.name].wrapMode = WrapMode.Once;
                 animation.Play(meleeAttack.name);

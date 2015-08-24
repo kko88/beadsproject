@@ -36,7 +36,7 @@ public class PlayerAttack : MonoBehaviour
     public AudioClip HealSound; // 물약사운드
 
 
-
+    bool alive;
     private float attackTime;
 
     public int Damage;
@@ -114,7 +114,7 @@ public class PlayerAttack : MonoBehaviour
     public void Awake()
     {
      //   DontDestroyOnLoad(this);
-
+        alive = true;
         nAttackYN = false;
         sAttackYN = false;
         fireYN = false;
@@ -140,125 +140,139 @@ public class PlayerAttack : MonoBehaviour
     }
     void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.Tab)) // tab키로 타겟잡기
+        if (alive)
         {
-            TargetEnemy();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if(nAttackYN == false)
-            inAction = true;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            if (sAttackYN == false)
+            if (Input.GetKeyDown(KeyCode.Tab)) // tab키로 타겟잡기
             {
-                if (curMp > sAttackmp)
-                    inSAction = true;
-
-                else
-                    GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
+                TargetEnemy();
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            if (fireYN == false)
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                if (curMp > rAttackmp)
-                    inRAction = true;
-
-                else
-                    GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
+                if (nAttackYN == false)
+                    inAction = true;
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            if (lightningYN == false)
+            if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                if (curMp > lAttackmp)
-                    inLAction = true;
-
-                else
-                    GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
-            }
-        }
-
-        if (inAction)
-        {
-            if (AttackAct(0, 1, KeyCode.Alpha1, null))
-            {
-            }
-            else
-            {
-                inAction = false;
-            }
-        }
-        if (inSAction)
-        {
-            if (AttackAct(5, 1, KeyCode.Alpha2, sparticleEffect))
-            {
-
-            }
-            else
-            {
-                inSAction = false;
-            }
-        }
-        if (inRAction)
-        {
-            if (AttackAct(0, 1, KeyCode.Alpha3, rparticleEffect))
-            {
-
-            }
-            else
-            {
-                inRAction = false;
-            }
-        }
-
-        if (inLAction)
-        {
-            if (AttackAct(4, 2, KeyCode.Alpha4, lparticleEffect))
-            {
-
-            }
-
-            else
-            {
-                inLAction = false;
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            if (windYN == false)
-            {
-                if (curMp > buffmp)
+                if (sAttackYN == false)
                 {
-                    Wind();
-                    GameObject.Find("BuffTime").SendMessage("Visible");
+                    if (curMp > sAttackmp)
+                        inSAction = true;
+
+                    else
+                        GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                if (fireYN == false)
+                {
+                    if (curMp > rAttackmp)
+                        inRAction = true;
+
+                    else
+                        GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                if (lightningYN == false)
+                {
+                    if (curMp > lAttackmp)
+                        inLAction = true;
+
+                    else
+                        GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
+                }
+            }
+
+            if (inAction)
+            {
+                if (AttackAct(0, 1, KeyCode.Alpha1, null))
+                {
+                }
+                else
+                {
+                    inAction = false;
+                }
+            }
+            if (inSAction)
+            {
+                if (AttackAct(5, 1, KeyCode.Alpha2, sparticleEffect))
+                {
 
                 }
                 else
-                    GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
+                {
+                    inSAction = false;
+                }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            if(waterYN == false)
-            Water();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            if(hpYN == false)
-            HealingPosition();
-        }
+            if (inRAction)
+            {
+                if (AttackAct(0, 1, KeyCode.Alpha3, rparticleEffect))
+                {
 
-        Die();
+                }
+                else
+                {
+                    inRAction = false;
+                }
+            }
 
+            if (inLAction)
+            {
+                if (AttackAct(4, 2, KeyCode.Alpha4, lparticleEffect))
+                {
+
+                }
+
+                else
+                {
+                    inLAction = false;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                if (windYN == false)
+                {
+                    if (curMp > buffmp)
+                    {
+                        Wind();
+                        GameObject.Find("BuffTime").SendMessage("Visible");
+
+                    }
+                    else
+                        GameObject.Find("HUDText").SendMessage("notEnoughtMp", notEnoughMp);
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                if (waterYN == false)
+                    Water();
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                if (hpYN == false)
+                    HealingPosition();
+            }
+
+            Die();
+        }
+        else
+        {
+            animation.Play(Dieclip.name);
+            if (animation[Dieclip.name].time > 0.9  * animation[Dieclip.name].length)
+            {
+                animation[Dieclip.name].time = 0.89f * animation[Dieclip.name].length;
+                gameObject.GetComponent<AdvancedMovement>().enabled = false;
+                gameObject.GetComponent<PlayerInput>().enabled = false;
+                Application.LoadLevel("GameOver");
+            }
+            
+
+        }
     }
 
 
@@ -527,13 +541,13 @@ public class PlayerAttack : MonoBehaviour
         GameObject.Find("GetDamageText").SendMessage("pcGetDamage", Damage);
    //     GameObject.Find("HP").GetComponent<UILabel>().text = Health.ToString();
         
-        if (Health < 0)
-        {
-            Health = 0;
-            audio.PlayOneShot(dieSound);
-            animation.Play(Dieclip.name);
-            myTransform.tag = "Chest";
-        }
+        //if (Health < 0)
+        //{
+        //    Health = 0;
+        //    audio.PlayOneShot(dieSound);
+        //    animation.Play(Dieclip.name);
+        //    myTransform.tag = "Chest";
+        //}
     }
 
     public void wasteMP()
@@ -587,6 +601,7 @@ public class PlayerAttack : MonoBehaviour
                 Ended = true;
                 Started = false;
                 Debug.Log("GameOver");
+                alive = false;
             }
         }
     }
@@ -630,12 +645,20 @@ public class PlayerAttack : MonoBehaviour
 
         if (healparticleEffect != null)
         {
-            Instantiate(healparticleEffect, new Vector3(transform.position.x, transform.position.y + 4f, transform.position.z), Quaternion.identity);
+            GameObject child = Instantiate(healparticleEffect, new Vector3(transform.position.x, transform.position.y , transform.position.z), Quaternion.identity) as GameObject;
+            child.transform.parent = transform;
+            Destroy(child, 3);
         }
         hpYN = true;
         Invoke("Hpdelay", 2.0f);
     }
 
+    public bool GetDie()
+    {
+        if (Health < 1)
+            return false;  // 죽으면 false 전달
+        else return true;
+    }
     void Hpdelay()
     {
         hpYN = false;
@@ -674,7 +697,12 @@ public class PlayerAttack : MonoBehaviour
         windYN = true;
         if (windparticleEffect != null)
         {
-            Instantiate(windparticleEffect, new Vector3(transform.position.x, transform.position.y + 5, transform.position.z), Quaternion.identity);
+           GameObject child = Instantiate(windparticleEffect, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+            child.transform.parent = transform;
+           GameObject child2 = Instantiate(windparticleEffect, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+            child2.transform.parent = transform;
+           GameObject child3 = Instantiate(windparticleEffect, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+            child3.transform.parent = transform;
         }
     }
 

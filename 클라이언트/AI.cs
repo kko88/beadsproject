@@ -110,6 +110,13 @@ public class AI : MonoBehaviour {
     }
     private void Decide()
     {
+        if(!(GameObject.Find("pc").GetComponent<PlayerAttack>().GetDie()))
+        {
+            _target = _home;
+
+            if (_me.InCombat)
+                _me.InCombat = false;
+        }
         Move();
 
         int opt = 0;
@@ -170,7 +177,7 @@ public class AI : MonoBehaviour {
 
             if (_target.name == "Spawn Point")
             {
-                if (dist < GameSettingtwo.BASE_MELEE_RANGE)
+                if (dist < GameSettingtwo.BASE_MELEE_RANGE  )
                 {
                     _target = null;
                     _state = AI.State.Idle;
